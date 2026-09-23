@@ -69,18 +69,34 @@ initDynamic();renderVP();
 function V5esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]})}
 function V5shuffle(a){return a.slice().sort(function(){return Math.random()-.5})}
 function V5vp(raw){var s=String(raw||""),m=s.match(/^(.*?)(?=[\u4e00-\u9fff])/);return m?{de:m[1].trim(),zh:s.slice(m[1].length).trim()}:{de:s.trim(),zh:""}}
-function V5allV(){return (typeof FULL_VOCAB!=="undefined"&&Array.isArray(FULL_VOCAB))?FULL_VOCAB:(window.FULL_VOCAB||window.VOCAB||[])}
-function V5pool(u){return V5allV().filter(function(v){var z=V5vp(v.raw);return (u==="ALL"||v.unit===u)&&z.de&&z.zh})}
-function V5isPhrase(v){return /\\s/.test(V5vp(v.raw).de.trim())}
+function V5allV(){
+ var a=[];
+ try{if(typeof FULL_VOCAB!=="undefined"&&Array.isArray(FULL_VOCAB))a=FULL_VOCAB}catch(e){}
+ try{if((!a||!a.length)&&typeof VOCAB!=="undefined"&&Array.isArray(VOCAB))a=VOCAB}catch(e){}
+ try{if((!a||!a.length)&&Array.isArray(window.FULL_VOCAB))a=window.FULL_VOCAB}catch(e){}
+ try{if((!a||!a.length)&&Array.isArray(window.VOCAB))a=window.VOCAB}catch(e){}
+ return Array.isArray(a)?a:[];
+}
+function V5pool(u){
+ return V5allV().filter(function(v){
+  var z=V5vp(v&&v.raw);
+  return v&&(u==="ALL"||v.unit===u)&&z.de&&z.zh;
+ });
+}
+function V5isPhrase(v){return /\s/.test(V5vp(v.raw).de.trim())}
 function V5balancedItems(p,n){
+ p=Array.isArray(p)?p:[];
+ n=Math.min(Math.max(1,n||1),p.length);
  var singles=V5shuffle(p.filter(function(v){return !V5isPhrase(v)}));
  var phrases=V5shuffle(p.filter(function(v){return V5isPhrase(v)}));
- var targetP=Math.min(phrases.length,Math.floor(n/2)),targetS=Math.min(singles.length,n-targetP);
- if(targetP<Math.floor(n/2)) targetS=Math.min(singles.length,n-targetP);
+ var targetP=Math.min(phrases.length,Math.floor(n/2));
+ var targetS=Math.min(singles.length,n-targetP);
  var out=V5shuffle(singles.slice(0,targetS).concat(phrases.slice(0,targetP)));
+ var used={};out.forEach(function(v){used[V5key(v)]=1});
  if(out.length<n){
-   var used={};out.forEach(function(v){used[V5key(v)]=1});
-   V5shuffle(p).forEach(function(v){if(out.length<n&&!used[V5key(v)]){used[V5key(v)]=1;out.push(v)}})
+  V5shuffle(p).forEach(function(v){
+   if(out.length<n&&!used[V5key(v)]){used[V5key(v)]=1;out.push(v)}
+  });
  }
  return V5shuffle(out);
 }
@@ -161,21 +177,21 @@ var V5GB={
 function V5style(){
  if(document.getElementById("v5-style"))return;
  var s=document.createElement("style");s.id="v5-style";s.textContent=
- ":root{--vbg:#e9edf1;--vcard:#f8fafb;--vink:#303842;--vmuted:#69737e;--vline:#c2cbd3;--vacc:#63798a;--vsoft:#dde5eb;--vbad:#98777a;--vshadow:0 14px 38px rgba(55,67,78,.08)}"+
- "body{background:radial-gradient(circle at 8% 0%,rgba(170,188,202,.18),transparent 34%),radial-gradient(circle at 95% 15%,rgba(190,198,210,.16),transparent 32%),var(--vbg)!important;color:var(--vink)!important;font-family:Inter,'Noto Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif!important;letter-spacing:.01em;font-weight:520}"+
+ ":root{--vbg:#ecebf0;--vcard:#faf9fb;--vink:#34333d;--vmuted:#706e79;--vline:#c9c6d0;--vacc:#788b80;--vsoft:#e1e5e1;--vbad:#987b83;--vshadow:0 14px 38px rgba(55,67,78,.08)}"+
+ "body{background:radial-gradient(circle at 8% 0%,rgba(180,173,198,.18),transparent 34%),radial-gradient(circle at 95% 15%,rgba(183,199,188,.15),transparent 32%),var(--vbg)!important;color:var(--vink)!important;font-family:Inter,'Noto Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif!important;letter-spacing:.01em;font-weight:520}"+
  "header{background:linear-gradient(135deg,#5d7067,#7f8784 55%,#888492)!important;padding:34px 18px 30px!important;box-shadow:0 12px 32px rgba(54,63,58,.12)}"+
  "nav{background:rgba(246,248,244,.90)!important;border-bottom:1px solid rgba(150,160,153,.34)!important;box-shadow:0 8px 24px rgba(55,65,59,.05)}"+
  ".tab{padding:10px 15px;border-radius:13px;color:#5d6862!important;transition:.18s ease}.tab:hover{background:#e8ede8;transform:translateY(-1px)}.tab.active{background:#d9e2dc!important;color:#3f544a!important;box-shadow:inset 0 0 0 1px rgba(88,109,98,.08)}"+
- ".card{background:rgba(248,250,251,.95)!important;border:1.6px solid rgba(169,181,191,.72)!important;border-radius:18px!important;box-shadow:var(--vshadow)!important}"+
- ".primary,.secondary,.dangerbtn{border-radius:12px!important;min-height:44px;padding:10px 17px!important;transition:transform .16s ease,box-shadow .16s ease;font-weight:650}.primary{background:#647b8c!important;box-shadow:0 7px 18px rgba(70,88,79,.16)}.primary:hover,.secondary:hover{transform:translateY(-1px)}.primary:active,.secondary:active,.option:active,.v5memopt:active{transform:scale(.98)}"+
+ ".card{background:rgba(248,250,251,.95)!important;border:1.7px solid rgba(174,169,184,.72)!important;border-radius:18px!important;box-shadow:var(--vshadow)!important}"+
+ ".primary,.secondary,.dangerbtn{border-radius:12px!important;min-height:44px;padding:10px 17px!important;transition:transform .16s ease,box-shadow .16s ease;font-weight:650}.primary{background:#788b80!important;box-shadow:0 7px 18px rgba(70,88,79,.16)}.primary:hover,.secondary:hover{transform:translateY(-1px)}.primary:active,.secondary:active,.option:active,.v5memopt:active{transform:scale(.98)}"+
  ".secondary{background:#e4e9e4!important;color:#405047!important;border:1px solid #d0d8d1!important}.dangerbtn{background:#eee1df!important;color:#76514e!important}"+
  "select,input,textarea{border-radius:13px!important;border-color:#cbd3cc!important;background:#fbfcfa!important}"+
- ".option{border-radius:13px!important;background:#f8fafb!important;border:1.6px solid #c4ced6!important;padding:14px 16px!important;transition:.16s ease;font-weight:560}.option:hover{background:#edf2f5!important;border-color:#7d91a0!important;transform:translateY(-1px)}"+
+ ".option{border-radius:13px!important;background:#faf9fb!important;border:1.6px solid #c8c4ce!important;padding:14px 16px!important;transition:.16s ease;font-weight:560}.option:hover{background:#eef2ef!important;border-color:#84958b!important;transform:translateY(-1px)}"+
  ".option.correct{background:#dce9df!important;border-color:#678473!important}.option.wrong{background:#eee0de!important;border-color:#a47772!important}"+
  ".answer{border-radius:15px!important;background:#f0f4f0!important;border-left:4px solid #667c71!important}.answer.bad{background:#f3e9e7!important;border-left-color:#9a706c!important}.answer.ok{background:#e8f0ea!important;border-left-color:#5d7c69!important}"+
  ".practice-config{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.practice-config label{display:block;color:#6e7972;font-size:13px;margin-bottom:5px}.grammar-summary{padding:15px 16px;border-radius:17px;background:#e9eee9;border:1px solid #d0d9d2;margin:15px 0}.grammar-chip{display:inline-block;margin:4px 5px 4px 0;padding:6px 10px;border-radius:99px;background:#f7faf6;border:1px solid #d2dbd3;font-size:13px}"+
  ".v5stage{margin-top:18px}.v5stageq{font-size:26px;font-weight:730;line-height:1.45;margin:16px 0 22px}.v5progress{height:7px;background:#e1e6e1;border-radius:99px;overflow:hidden;margin:12px 0 20px}.v5progress i{display:block;height:100%;background:#748b80;width:0;transition:width .25s ease}.v5actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}"+
- ".v5memcard{max-width:760px;margin:18px auto;padding:28px;border:1.8px solid #bcc8d1;border-radius:18px;background:linear-gradient(145deg,#f9fbfc,#eaf0f4);text-align:center;box-shadow:0 16px 36px rgba(54,68,80,.09)}.v5memword{font-size:30px;font-weight:780;min-height:55px}.v5memopts{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px}.v5memopt{border:1.6px solid #c2ccd4;background:#f8fafb;border-radius:13px;padding:14px 17px;cursor:pointer;transition:.16s ease;min-width:180px;font-weight:560}.v5memopt:hover{background:#e9eff3;border-color:#788e9f;transform:translateY(-1px)}.v5memopt.correct{background:#dce8ee;border-color:#657f92}.v5memopt.wrong{background:#eee1e2;border-color:#9a767b}.v5next{display:none;margin-top:16px}.v5next.show{display:inline-flex}"+
+ ".v5memcard{max-width:760px;margin:18px auto;padding:28px;border:1.8px solid #c0bbc9;border-radius:18px;background:linear-gradient(145deg,#fbfafd,#efedf3);text-align:center;box-shadow:0 16px 36px rgba(54,68,80,.09)}.v5memword{font-size:30px;font-weight:780;min-height:55px}.v5memopts{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px}.v5memopt{border:1.6px solid #c2ccd4;background:#f8fafb;border-radius:13px;padding:14px 17px;cursor:pointer;transition:.16s ease;min-width:180px;font-weight:560}.v5memopt:hover{background:#e9eff3;border-color:#788e9f;transform:translateY(-1px)}.v5memopt.correct{background:#dce8ee;border-color:#657f92}.v5memopt.wrong{background:#eee1e2;border-color:#9a767b}.v5next{display:none;margin-top:16px}.v5next.show{display:inline-flex}"+
  ".v5homegrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.v5homeitem{padding:20px;border-radius:18px;background:#f1f4f0;border:1px solid #d6ddd7;text-align:center}.v5homeitem span{font-size:13px;color:#707a74}.v5homeitem b{display:block;font-size:30px;margin-top:3px}.v5trans{min-height:90px;margin-top:12px;padding:15px;border-radius:15px;background:#f0f4f0;border:1px solid #d0d8d1;white-space:pre-wrap}@media(max-width:720px){.practice-config,.v5homegrid{grid-template-columns:1fr 1fr}.v5stageq{font-size:23px}}@media(max-width:500px){.practice-config,.v5homegrid{grid-template-columns:1fr}.v5memopt{width:100%}}";
  document.head.appendChild(s);
 }
@@ -264,19 +280,38 @@ window.V5nextSmart=function(){if(!V5smart.answered)return;V5smart.pos++;V5render
 var V5mem={items:[],pos:0,score:0,answered:false,mode:"de2zh",unit:"ALL"};
 function V5wordsBuild(){
  var w=document.getElementById("words");if(!w)return;
- w.innerHTML='<div class="card"><div style="font-size:12px;letter-spacing:.14em;color:#7a867f;font-weight:700">VOCABULARY MEMORY · 词汇记背</div><h2>单词记背</h2><p class="muted">从已有 E1–E8 词库随机抽取，自动判断答案并记录每个词条的熟练程度。答完后必须点击“下一题”才会进入下一题。</p><div class="vocab-tools"><select id="v5mu"></select><select id="v5mm"><option value="de2zh">看德选中</option><option value="zh2de">看中选德</option></select><select id="v5mc"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></div><div class="v5memcard"><button class="primary" onclick="V5startMem()">▶ 点击开始</button><div class="memory-mode" id="v5mlabel">尚未开始</div><div class="v5memword" id="v5mword">选择范围和题量后开始</div><div id="v5mopts" class="v5memopts"></div><div id="v5mfb"></div><button id="v5mnext" class="primary v5next" onclick="V5nextMem()">下一题 →</button><div class="memory-stat" id="v5mstat"></div></div></div><div class="card"><h3>词汇熟练度</h3><p class="muted">答题历史会自动形成词条熟练度。答错会降低熟练度并缩短复习间隔，连续答对会提高熟练度。</p><div id="v5vp"></div></div><div class="card"><div style="font-size:12px;letter-spacing:.14em;color:#7a867f;font-weight:700">QUICK TRANSLATOR · 快速翻译</div><h3>德语 ↔ 中文</h3><textarea id="v5ti" placeholder="输入德语单词、短语或句子"></textarea><div class="translator-actions"><select id="v5tp"><option value="auto">自动判断</option><option value="de|zh-CN">德语 → 中文</option><option value="zh-CN|de">中文 → 德语</option></select><button class="primary" onclick="V5translate()">翻译</button><button class="secondary" onclick="document.getElementById(\'v5ti\').value=\'\';document.getElementById(\'v5tr\').textContent=\'翻译结果会显示在这里。\'">清空</button></div><div id="v5tr" class="v5trans muted">翻译结果会显示在这里。</div><p><a href="https://translate.google.com/?sl=de&tl=zh-CN&op=translate" target="_blank" rel="noopener" style="color:#61776b">打开 Google 翻译 ↗</a></p></div>';
- var s=document.getElementById("v5mu");s.innerHTML='<option value="ALL">全部 E1–E8</option>'+Object.keys(V5UG).map(function(u){return '<option value="'+u+'">'+u+'</option>'}).join("");V5renderVP();
+ w.innerHTML='<div class="card"><div style="font-size:12px;letter-spacing:.14em;color:#7a867f;font-weight:700">VOCABULARY MEMORY · 词汇记背</div><h2>单词记背</h2><p class="muted">从已有 E1–E8 词库随机抽取，自动判断答案并记录每个词条的熟练程度。答完后必须点击“下一题”才会进入下一题。</p><div class="vocab-tools"><select id="v5mu"></select><select id="v5mm"><option value="de2zh">看德选中</option><option value="zh2de">看中选德</option></select><select id="v5mc"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></div><div class="v5memcard"><button id="v5mstart" type="button" class="primary">▶ 点击开始</button><div class="memory-mode" id="v5mlabel">尚未开始</div><div class="v5memword" id="v5mword">选择范围和题量后开始</div><div id="v5mopts" class="v5memopts"></div><div id="v5mfb"></div><button id="v5mnext" class="primary v5next" onclick="V5nextMem()">下一题 →</button><div class="memory-stat" id="v5mstat"></div></div></div><div class="card"><h3>词汇熟练度</h3><p class="muted">答题历史会自动形成词条熟练度。答错会降低熟练度并缩短复习间隔，连续答对会提高熟练度。</p><div id="v5vp"></div></div><div class="card"><div style="font-size:12px;letter-spacing:.14em;color:#7a867f;font-weight:700">QUICK TRANSLATOR · 快速翻译</div><h3>德语 ↔ 中文</h3><textarea id="v5ti" placeholder="输入德语单词、短语或句子"></textarea><div class="translator-actions"><select id="v5tp"><option value="auto">自动判断</option><option value="de|zh-CN">德语 → 中文</option><option value="zh-CN|de">中文 → 德语</option></select><button class="primary" onclick="V5translate()">翻译</button><button class="secondary" onclick="document.getElementById(\'v5ti\').value=\'\';document.getElementById(\'v5tr\').textContent=\'翻译结果会显示在这里。\'">清空</button></div><div id="v5tr" class="v5trans muted">翻译结果会显示在这里。</div><p><a href="https://translate.google.com/?sl=de&tl=zh-CN&op=translate" target="_blank" rel="noopener" style="color:#61776b">打开 Google 翻译 ↗</a></p></div>';
+ var startBtn=document.getElementById("v5mstart");if(startBtn)startBtn.addEventListener("click",function(e){e.preventDefault();V5startMem()});var s=document.getElementById("v5mu");s.innerHTML='<option value="ALL">全部 E1–E8</option>'+Object.keys(V5UG).map(function(u){return '<option value="'+u+'">'+u+'</option>'}).join("");V5renderVP();
 }
 function V5startMem(){
- var mode=document.getElementById("v5mm").value,unit=document.getElementById("v5mu").value,n=+document.getElementById("v5mc").value;
- var p=V5pool(unit);if(!p.length){alert("当前范围没有可用词条。");return}
- var st=V5store(),weighted=[];
- p.forEach(function(v){var x=st[V5key(v)]||{},w=Math.min(12,1+(x.wrong||0)*3+(x.streak<2?2:0));for(var i=0;i<w;i++)weighted.push(v)});
- var weightedUnique=[],seen={};
- V5shuffle(weighted).forEach(function(v){if(!seen[V5key(v)]){seen[V5key(v)]=1;weightedUnique.push(v)}});
- var out=V5balancedItems(weightedUnique,Math.min(n,p.length));
- V5mem={items:out,pos:0,score:0,answered:false,mode:mode,unit:unit};
- V5showMem();
+ try{
+  var modeEl=document.getElementById("v5mm"),unitEl=document.getElementById("v5mu"),countEl=document.getElementById("v5mc");
+  var mode=modeEl?modeEl.value:"de2zh",unit=unitEl?unitEl.value:"ALL",n=countEl?parseInt(countEl.value,10):20;
+  var p=V5pool(unit);
+  if(!p.length){
+   var all=V5allV();
+   alert("词库暂时没有被读取到。当前词库记录数："+all.length+"。如果你刚打开网页，请刷新一次后再试。");
+   return;
+  }
+  var st=V5store(),weighted=[];
+  p.forEach(function(v){
+   var x=st[V5key(v)]||{},w=Math.min(12,1+(x.wrong||0)*3+((x.streak||0)<2?2:0));
+   for(var i=0;i<w;i++)weighted.push(v);
+  });
+  var unique=[],seen={};
+  V5shuffle(weighted).forEach(function(v){
+   var k=V5key(v);
+   if(!seen[k]){seen[k]=1;unique.push(v);}
+  });
+  var out=V5balancedItems(unique,Math.min(n,p.length));
+  if(!out.length)out=V5shuffle(p).slice(0,Math.min(n,p.length));
+  V5mem={items:out,pos:0,score:0,answered:false,mode:mode,unit:unit};
+  V5showMem();
+ }catch(e){
+  console.error("V5 vocabulary start error",e);
+  var fb=document.getElementById("v5mfb");
+  if(fb)fb.innerHTML='<div class="answer bad"><b>启动失败</b><br><span class="small">'+V5esc(String(e&&e.message||e))+'</span><br>请刷新页面后重试。</div>';
+ }
 }
 function V5showMem(){
  var w=document.getElementById("v5mword"),o=document.getElementById("v5mopts"),fb=document.getElementById("v5mfb"),nx=document.getElementById("v5mnext");
