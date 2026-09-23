@@ -1136,5 +1136,23 @@ init();
 try{populateVocabControls();}catch(e){console.warn('词汇模块初始化失败',e)}
 </script>
 <script src="upgrade.js?v=8"></script>
+<script>
+/* Vocabulary click safety patch: use event delegation so dynamically-created choices always respond. */
+document.addEventListener("click", function(e){
+  var opt=e.target.closest && e.target.closest("#v5mopts .v5memopt");
+  if(opt){
+    e.preventDefault();
+    var answer=opt.textContent;
+    if(typeof window.V5answerMem==="function") window.V5answerMem(opt, answer);
+    return;
+  }
+  var start=e.target.closest && e.target.closest("#v5mstart");
+  if(start){
+    e.preventDefault();
+    if(typeof window.V5startMem==="function") window.V5startMem();
+    return;
+  }
+}, true);
+</script>
 </body>
 </html>
