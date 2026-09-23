@@ -1,0 +1,1137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deutsch Training Lab｜新一代大学德语1 · E1–E10</title>
+<style>
+:root{
+ --bg:#f5f6fb;--card:#fff;--text:#20232b;--muted:#68707d;--line:#e4e6ee;
+ --accent:#5858d8;--accent2:#eeeefe;--ok:#15855b;--bad:#c83b55;
+ --shadow:0 8px 28px rgba(30,38,70,.07)
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+button,input,select,textarea{font:inherit}
+header{background:linear-gradient(135deg,#24245f,#6565df);color:#fff;padding:28px 18px}
+.wrap{max-width:1180px;margin:auto}
+h1{margin:0 0 4px;font-size:27px}
+header p{margin:0;opacity:.9}
+nav{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:5px;overflow:auto;padding:8px 0}
+.tab{border:0;background:transparent;padding:9px 13px;border-radius:10px;cursor:pointer;white-space:nowrap}
+.tab.active{background:var(--accent2);color:#3939a8;font-weight:700}
+main{padding:22px 0 70px}
+.page{display:none}.page.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px}
+.stat b{font-size:28px;display:block}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.primary,.secondary,.dangerbtn{border:0;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:650}
+.primary{background:var(--accent);color:#fff}.secondary{background:#eef0f7;color:#30343d}.dangerbtn{background:#fff0f3;color:#a22b43}
+button:disabled{opacity:.55;cursor:not-allowed}
+.option{display:block;width:100%;text-align:left;background:#fafbfe;border:1px solid var(--line);padding:12px 14px;margin:8px 0;border-radius:10px;cursor:pointer}
+.option:hover{border-color:#aaaaf0}.option.correct{border-color:var(--ok);background:#effaf5}.option.wrong{border-color:var(--bad);background:#fff0f3}
+.qhead{display:flex;justify-content:space-between;gap:12px}
+.tag{font-size:12px;padding:3px 8px;border-radius:99px;background:#eeeefb;color:#4545a8}
+.answer{margin-top:14px;padding:14px;border-radius:12px;background:#f7f8fb;border-left:4px solid var(--accent)}
+.answer.ok{border-left-color:var(--ok)}.answer.bad{border-left-color:var(--bad)}
+input[type=text],input[type=number],select,textarea{
+ width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#fff
+}
+textarea{min-height:120px;resize:vertical}
+.fillrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.fillrow input{max-width:330px}
+.scorebar{height:9px;background:#e8e9ef;border-radius:99px;overflow:hidden}.scorebar i{display:block;height:100%;background:var(--accent);width:0}
+.pill{display:inline-block;padding:3px 8px;border-radius:99px;background:#f0f1f7;margin:2px;font-size:12px}
+.skillrow{padding:12px 0;border-bottom:1px solid var(--line)}
+.skillrow:last-child{border-bottom:0}
+.word{display:grid;grid-template-columns:110px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.word b{font-size:16px}.word .raw{white-space:normal}
+.unitgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.unitbtn{padding:13px;border:1px solid var(--line);background:#fff;border-radius:12px;cursor:pointer;text-align:left}
+.unitbtn:hover{border-color:#aaaaf0}.unitbtn b{display:block;font-size:18px}
+.material{padding:13px;border:1px solid var(--line);border-radius:12px;margin:8px 0;background:#fcfcfe}
+.flash{min-height:180px;display:flex;align-items:center;justify-content:center;text-align:center;border:1px dashed #cfd2df;border-radius:14px;padding:20px;cursor:pointer;background:#fbfbff}
+.flash .de{font-size:27px;font-weight:750}.flash .zh{font-size:20px}
+.kpi{display:flex;gap:8px;flex-wrap:wrap}
+.kpi span{background:#f0f1f7;border-radius:10px;padding:7px 10px}
+.notice{background:#f7f7ff;border:1px solid #e3e3ff;padding:12px;border-radius:12px}
+.hidden{display:none}
+hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+@media(max-width:820px){.grid,.grid2{grid-template-columns:1fr}.unitgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){h1{font-size:23px}.card{padding:15px}.word{grid-template-columns:1fr}.unitgrid{grid-template-columns:1fr 1fr}}
+
+/* ===== Vocabulary Memory Module ===== */
+.vocab-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.vocab-tools select,.vocab-tools input{min-width:150px}
+.memory-card{max-width:760px;margin:18px auto;padding:28px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,#fff,#f7f7ff);text-align:center;box-shadow:var(--shadow)}
+.memory-mode{font-size:12px;color:var(--muted);margin-bottom:8px}
+.memory-word{font-size:30px;font-weight:750;letter-spacing:.2px;min-height:54px}
+.memory-answer{font-size:22px;margin-top:16px;min-height:38px}
+.memory-answer.hidden{visibility:hidden}
+.memory-buttons{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px}
+.memory-stat{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;color:var(--muted);font-size:13px}
+.unit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.unit-mini{padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff;cursor:pointer}
+.unit-mini:hover{border-color:var(--accent)}
+.vocab-list{max-height:520px;overflow:auto}
+.vocab-row{display:grid;grid-template-columns:80px 1.4fr 1fr;gap:10px;padding:10px 4px;border-bottom:1px solid var(--line)}
+@media(max-width:700px){.vocab-row{grid-template-columns:50px 1fr}.vocab-row .vcn{grid-column:2}.memory-word{font-size:25px}}
+
+</style>
+
+<style id="accessibility-theme">
+:root{
+ --bg:#e8ebe5;
+ --panel:#f3f5f0;
+ --card:#f8f9f5;
+ --ink:#2f3833;
+ --muted:#68736d;
+ --line:#cbd2ca;
+ --accent:#61786b;
+ --accent2:#788b82;
+ --good:#587564;
+ --bad:#9a6d68;
+ --shadow:0 8px 24px rgba(48,60,53,.08);
+}
+body{font-size:16px;line-height:1.72;background:var(--bg);color:var(--ink)}
+h1,h2,h3{line-height:1.35;letter-spacing:.01em}
+p,.muted,.small,.material,.word,.skillrow{font-size:1rem}
+button,input,select,textarea{font-size:1rem}
+button{min-height:42px}
+.card{background:var(--card);border-color:var(--line);box-shadow:var(--shadow)}
+.primary{background:#61786b;border-color:#61786b}
+.secondary{background:#e4e9e3;border-color:#c4cec6;color:#344139}
+.dangerbtn{background:#9a6d68;border-color:#9a6d68}
+.notice{background:#e5ebe5;border-color:#c5d0c7}
+.option{background:#f5f7f3;border-color:#c9d1ca;color:#2f3833}
+.option:hover{border-color:#71877a;background:#e9eee9}
+.option.correct{background:#dce9df!important;border-color:#6d8c79!important}
+.option.wrong{background:#eee0de!important;border-color:#a27670!important}
+input,select,textarea{background:#fbfcf9;border-color:#c5cec7;color:#2f3833}
+.wideInput{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--line);border-radius:12px}
+</style>
+</head>
+<body>
+<header>
+ <div class="wrap">
+  <h1>Deutsch Training Lab 🇩🇪</h1>
+  <p>《新一代大学德语1》E1–E10 · 词汇 × 语法 × 错题 × 间隔强化</p>
+ </div>
+</header>
+
+<nav><div class="wrap tabs">
+ <button class="tab active" data-page="home">首页</button>
+ <button class="tab" data-page="learn">学习中心</button>
+ <button class="tab" data-page="quiz">智能练习</button>
+ <button class="tab" data-page="review">今日复习</button>
+ <button class="tab" data-page="mistakes">错题本</button>
+ <button class="tab" data-page="words">词汇库</button>
+ <button class="tab" data-page="grammar">语法地图</button>
+ <button class="tab" data-page="library">知识库</button>
+ <button class="tab" data-page="data">数据</button>
+</div></nav>
+
+<main class="wrap">
+
+<section id="home" class="page active">
+ <div class="card">
+  <h2>把它当成你的长期德语训练室</h2>
+  <p>这版是在原 Einheit 8 网站的基础上扩展：按单元、语法类型和薄弱点组织训练；每次答题都会留下记录，错误会提高相关知识点之后的出现概率，并进入复习队列。现在还可以根据薄弱知识点从现有资料支持的题型模板中自动生成新的变式题。</p>
+  <div class="kpi">
+   <span>累计答题 <b id="total">0</b></span>
+   <span>正确率 <b id="rate">—</b></span>
+   <span>错题 <b id="wrongTotal">0</b></span>
+   <span>待复习 <b id="dueTotal">0</b></span>
+  </div>
+<div class="notice" style="margin-top:12px">
+<b>教材覆盖说明：</b>网站已按《新一代大学德语1》的10单元官方目录建立结构；目前 E1–E8 的词汇以你上传的词汇材料为主要来源并已拆分到对应单元。
+E9–E10 的单元名称已建立，但你尚未提供这两单元的词汇/课文原始材料，因此网站不会擅自把网络上无法核验的内容冒充成课本内容。
+</div>
+
+  <p style="margin-top:15px">
+   <button class="primary" onclick="startSmartQuiz()">开始智能10题</button>
+   <button class="secondary" onclick="go('review')">先做今日复习</button>
+  </p>
+ </div>
+
+ <div class="card">
+  <h3>单元入口</h3>
+  <div class="unitgrid" id="unitGrid"></div>
+ </div>
+
+ <div class="grid">
+  <div class="card"><h3>当前材料覆盖</h3><p id="coverageText" class="muted"></p></div>
+  <div class="card"><h3>系统怎样强化</h3><p class="muted">错误知识点会增加权重；答对后权重逐步下降。每道错题保存“题目＋知识点＋解释”，可进入定向复习。</p></div>
+  <div class="card"><h3>长期保存</h3><p class="muted">学习记录保存在浏览器 localStorage。可在“数据”中导出 JSON，换设备时再导入。</p></div>
+ </div>
+</section>
+
+<section id="learn" class="page">
+ <div class="card">
+  <h2>学习中心</h2>
+  <p class="muted">先选单元，再选择词汇、语法或材料。E9–E10 目前只建立框架，不会用没有提供的内容冒充课本内容。</p>
+  <div class="unitgrid" id="learnUnits"></div>
+ </div>
+ <div id="learnContent"></div>
+</section>
+
+<section id="quiz" class="page">
+ <div class="card">
+  <div class="qhead">
+   <div><span class="tag" id="qtype">选择题</span><h2 id="qtext">准备开始…</h2></div>
+   <div class="muted" id="progress"></div>
+  </div>
+  <div id="options"></div>
+  <div id="fillbox"></div>
+  <div id="feedback"></div>
+ </div>
+ <div class="card">
+  <div class="scorebar"><i id="bar"></i></div>
+  <p id="sessioninfo" class="muted">本轮尚未开始</p>
+  <button class="secondary" id="nextBtn" onclick="nextQuestion()">下一题</button>
+  <button class="secondary" onclick="go('mistakes')">查看错题</button>
+ </div>
+</section>
+
+<section id="review" class="page">
+ <div class="card">
+  <h2>今日复习</h2>
+  <p class="muted">系统根据你的历史错误与复习时间生成。刚答错的知识点会更快回来。</p>
+  <div id="reviewList"></div>
+  <button class="primary" onclick="startReview()">开始今日复习</button>
+ </div>
+</section>
+
+<section id="mistakes" class="page">
+ <div class="card">
+  <h2>错题本</h2>
+  <p class="muted">这里保留最近的错误记录，并显示对应知识点和解释。可按单元/知识点筛选。</p>
+  <div class="grid2">
+   <select id="mistakeUnitFilter" onchange="renderMistakes()"><option value="">全部单元</option></select>
+   <select id="mistakeSkillFilter" onchange="renderMistakes()"><option value="">全部知识点</option></select>
+  </div>
+  <div id="mistakeList"></div>
+ </div>
+</section>
+
+
+<section id="words" class="page">
+ <div class="card">
+  <h2>词汇库 · 单元记忆</h2>
+  <p class="muted">已按单元整理当前网站已有的 E1–E8 词汇材料。每个单词/短语都可以进入“看中选德”或“看德选中”训练，并记录你的掌握情况。</p>
+  <div class="unit-grid" id="unitCards"></div>
+ </div>
+
+ <div class="card">
+  <h3>🔎 搜单词 / 搜知识点</h3>
+  <p class="muted">输入德语、中文、单元号或知识点关键词，结果会实时显示。</p>
+  <input id="wordSearch" class="wideInput" type="search" placeholder="例如：Dativ / nach Hause / 词汇 / E7 / gelernt">
+  <div id="wordList" class="vocab-list" style="margin-top:12px"></div>
+ </div>
+
+ <div class="card">
+  <h3>📚 单元词汇浏览</h3>
+  <div class="vocab-tools">
+   <select id="vocabUnit" onchange="renderVocabList()"></select>
+   <input id="vocabSearch" placeholder="搜索德语、中文或短语…" oninput="renderVocabList()">
+  </div>
+  <div class="vocab-list" id="vocabList"></div>
+ </div>
+
+ <div class="card">
+  <h3>🧠 单词记背</h3>
+  <div class="vocab-tools">
+   <select id="memoryUnit" onchange="resetMemory()"></select>
+   <select id="memoryMode" onchange="resetMemory()">
+    <option value="de2zh">看德选中</option>
+    <option value="zh2de">看中选德</option>
+   </select>
+   <select id="memoryCount" onchange="resetMemory()">
+    <option value="10">10题</option><option value="20" selected>20题</option><option value="50">50题</option>
+   </select>
+  </div>
+  <div class="memory-card">
+   <div style="margin-bottom:14px">
+    <button class="primary" id="memoryStartBtn" onclick="startMemoryTest()">▶ 点击开始</button>
+   </div>
+   <div class="memory-mode" id="memoryModeLabel">看德选中</div>
+   <div class="memory-word" id="memoryWord">准备开始</div>
+   <div class="memory-answer hidden" id="memoryAnswer"></div>
+   <div id="memoryOptions" class="memory-buttons"></div>
+   <div class="memory-buttons">
+    <button class="secondary" onclick="showMemoryAnswer()">显示答案</button>
+    <button class="secondary" onclick="nextMemory(true)">认识 / 正确</button>
+    <button class="dangerbtn" onclick="nextMemory(false)">不认识 / 错误</button>
+   </div>
+   <div class="memory-stat" id="memoryStat"></div>
+  </div>
+ </div>
+
+ <div class="card">
+  <h3>📈 单词掌握记录</h3>
+  <p class="muted">正确会提高该词的熟练度，错误会提高复习优先级。数据与原网站学习记录一样保存在浏览器本地，并可通过“我的学习数据”导出。</p>
+  <div id="vocabProgress"></div>
+ </div>
+</section>
+
+<section id="grammar" class="page">
+ <div class="card">
+  <h2>语法地图</h2>
+  <p class="muted">下面只整理当前上传资料能够支持的内容；没有资料支持的单元不会被编造。</p>
+  <div id="grammarCards"></div>
+ </div>
+</section>
+
+<section id="library" class="page">
+ <div class="card">
+  <h2>知识库 / 材料库</h2>
+  <p class="muted">当前已内置你这次上传的文件。这里还提供一个“自定义知识条目”入口，方便你以后随时补充词汇、语法、课文或听力笔记。</p>
+  <div id="sourceCatalog"></div>
+ <div class="card">
+  <h3>📥 上传并解析知识资料</h3>
+  <p class="muted">支持直接读取 TXT / MD / CSV / JSON 文本资料；PDF、DOCX 可上传保存文件名，但浏览器离线模式不会擅自伪造解析结果。TXT/MD/CSV/JSON 会自动按文本内容保存到本机知识库，之后可搜索。</p>
+  <div class="grid2">
+   <div><label>单元</label><select id="uploadUnit"><option>E1</option><option>E2</option><option>E3</option><option>E4</option><option>E5</option><option>E6</option><option>E7</option><option>E8</option><option>E9</option><option>E10</option></select></div>
+   <div><label>资料类型</label><select id="uploadType"><option>词汇</option><option>语法</option><option>课文</option><option>听力</option><option>解析</option><option>其他</option></select></div>
+  </div>
+  <p><input id="knowledgeFile" type="file" accept=".txt,.md,.csv,.json,.pdf,.docx"></p>
+  <button class="primary" onclick="parseKnowledgeFile()">上传并解析</button>
+  <div id="uploadResult" class="notice" style="margin-top:12px;display:none"></div>
+ </div>
+
+ </div>
+
+ <div class="card">
+  <h3>新增自己的知识条目</h3>
+  <div class="grid2">
+   <div><label>单元</label><select id="newUnit"><option>E1</option><option>E2</option><option>E3</option><option>E4</option><option>E5</option><option>E6</option><option>E7</option><option>E8</option><option>E9</option><option>E10</option></select></div>
+   <div><label>类型</label><select id="newType"><option>词汇</option><option>语法</option><option>课文</option><option>听力</option><option>固定表达</option><option>其他</option></select></div>
+  </div>
+  <p><input id="newTitle" placeholder="标题，例如：E9 Kapitel 1 新词"></p>
+  <p><textarea id="newContent" placeholder="粘贴你希望长期保留的内容……"></textarea></p>
+  <button class="primary" onclick="addCustomMaterial()">保存到本机知识库</button>
+  <div id="customMaterials"></div>
+ </div>
+</section>
+
+<section id="data" class="page">
+ <div class="card">
+  <h2>我的学习数据</h2>
+  <p class="muted">导出后是 JSON 文件。它包含答题统计、知识点表现、错题、复习计划和你自己添加的知识条目。</p>
+  <button class="primary" onclick="exportData()">导出全部记录</button>
+  <label class="secondary" style="display:inline-block;cursor:pointer">
+   导入记录 <input id="importFile" type="file" accept=".json" style="display:none" onchange="importData(event)">
+  </label>
+  <button class="dangerbtn" onclick="resetProgress()">清空学习记录</button>
+  <div class="notice" style="margin-top:14px">建议：每隔一段时间导出一次 JSON。HTML 文件本身可以一直使用，但浏览器的本地数据可能因清除站点数据而消失。</div>
+ </div>
+ <div class="card">
+  <h3>当前数据概览</h3>
+  <div id="dataOverview"></div>
+ </div>
+</section>
+
+</main>
+
+<script>
+const MATERIALS = [{"name": "B1E1-E5 Vokabeln.pdf", "type": "PDF", "pages": [{"page": 1, "text": "1\nEinheit 1-5\nI. Phrasen\nE1\nLieder singen 唱歌\nMusik hören 听音乐\ngern reisen 喜欢旅行\nÜbungen machen 做练习\nDeutsch lernen 学习德语\nWörter buchstabieren 拼单词\nTexte wiederholen 复习课文\nDeutschland kennen 了解德国\ndie Lehrerin fragen 问老师\nein Foto zeigen 展示一张照片\nDialoge bilden\n(er bildet)\n做对话\nShanghai schön finden\n(er findet)\n觉得上海很美\neine Gruppe gründen\n(er gründet)\n建一个群/小组\nSätze ordnen\n(er ordnet)\n给句子排序\nUnterricht haben\n(er hat)\n有课\nnett sein\n(er ist)\n很友善\nschön werden\n(er wird)\n变漂亮\ndas nicht wissen\n(er weiß)\n不知道这件事"}, {"page": 2, "text": "2\nE2\nTaiji machen / üben 打太极拳\nals Ingenieur arbeiten\n(er arbeitet)\n职业是工程师\nnichts sagen 什么都没说\nBlogs schreiben 写博客\nFußball spielen 踢足球\nKlavier spielen 弹钢琴\nBeispiele nennen 举例\noft joggen 经常慢跑\nPhilosophie mögen\n(er mag)\n喜欢哲学\neine Karte ziehen 抽出一张卡片\nFehler machen 犯错\neine Rolle spielen 扮演一个角色\noft tanzen\n(du tanzt)\n经常跳舞\nWörter ergänzen\n(du ergänzt)\n补充单词\nRad fahren\n(er fährt)\n骑车，骑行\ngut schlafen\n(er schläft)\n睡得好\nschnell laufen\n(er läuft)\n跑得快\nDeutsch sprechen\n(er spricht)\n说德语\nein Taxi nehmen\n(er nimmt)\n打车\nFilme sehen\n(er sieht)\n看电影\nfit aus/sehen\n(er sieht aus)\n看起来很健康\nBücher lesen\n(er liest)\n看书\nein paar (= einige) 一些"}, {"page": 3, "text": "3\nE3\nzu Mittag essen\n(er isst)\n吃午餐\nzu Abend essen 吃晚餐\nvegetarisch essen 素食\ngesund essen 吃得健康\nFreunde treffen\n(er trifft)\n和朋友碰面\njdm. (bei etw.D) helfen 帮助某人（做某事）\nes gibt +Akk. 有，存在\nFreunde irgendwohin ein/laden\n(er lädt ein, du lädst ein)\n邀请某人去何处\nSport machen / treiben 做运动\neine Vorlesung haben 有大课\neinen Termin haben 有约，有安排\nein Problem haben 有麻烦，有问题\nHunger haben (= hungrig sein) 饿了\nRecht haben 说得对\neine gute Idee 一个好主意\ndie Kultur kennen lernen 了解文化\ndie Hausaufgaben schreiben / machen 做作业\nTut mir leid. 我很抱歉。\nProgramme schreiben\n(= programmieren)\n编程\njdm. Bescheid sagen 告知某人（某事）\njeden Tag (= täglich) 每天\ndas Essen bestellen 点菜\nalles auf/essen 全都吃完\nkleine Portionen an/bieten 提供小份食物\nkeine Lebensmittel verschwenden\n(er verschwendet)\n不浪费食物\nLebensmittel sparen 节约食物\nzusammen / getrennt zahlen 一起/分开支付\nbis 10 zählen 数到 10\nnoch einmal / mal 再一次\ndas nächste Mal 下次"}, {"page": 4, "text": "4\nE4\neinkaufen gehen 去购物\nEinkäufe machen 采购\nalles haben 什么都有\nnichts brauchen 什么都不需要\nden Apfel probieren 试吃苹果\nSchlange stehen 排队\neine Torte backen 烘焙一个蛋糕\ndie Ware zurück/geben oder\num/tauschen\n退还或调换商品\nMedizin nehmen 吃药\nviel Müll produzieren 制造很多垃圾\nKein Problem! 没问题！\nMacht nichts. 没关系。\nDas macht zusammen ... 共计……\nEinen schönen Tag (noch). 祝（您/你）今天过得愉快！\nGleichfalls! 您/你也一样！\nein Beutel Toastbrot 一袋吐司面包\nein Bund Bananen 一串香蕉\nein Netz Orangen 一网兜橙子\nzwei Glas Marmelade 两瓶果酱\nein Stück Käse 一块奶酪\neine Packung Schinken 一包火腿\neine Tafel Schokolade 一板巧克力\nzwei Tüten Chips 两袋薯片\neine Schale Erdbeeren 一盒草莓\neine Packung Milch 一盒牛奶\neine Flasche Wasser 一瓶水\neine Dose Cola 一听可乐\nein bisschen (= ein wenig) 一点\nEs ist nett von dir. 你真好。"}, {"page": 5, "text": "5\nE5\nein Referat halten\n(er hält, du hältst)\n做（汇报）报告\njdn. interessieren 让某人感兴趣\njdn. freuen 让某人高兴\njdn. an/rufen 给某人打电话\njdn. besuchen 拜访某人\neine Karte besorgen 搞一张票/卡\nden Haushalt machen 做家务\nnichts / etwas / viel vor/haben 没有安排/有些安排/有很多安排\nfrüh auf/stehen 早起\nim Unterricht gut auf/passen 在课堂上集中注意力\neinen Film an/sehen 观看一部电影\nschnell ein/schlafen 快速入睡\n(eine) Pause machen 休息\nim Internet surfen 上网\nspazieren gehen 去散步\ndie Zähne putzen\n(du putzt)\n刷牙\neine Bachelorarbeit betreuen 辅导一篇学士论文\nGeld verdienen 赚钱\nNachhilfeunterricht geben 作为家教给别人补课\nNachhilfeunterricht bekommen 补课\ndie Freizeit genießen 享受业余时间\netw.N macht jdm. Spaß 某事给某人带来乐趣\nzu spät kommen 迟到\nPlatz nehmen 就坐\njdm. einen Vorschlag machen 给某人提一个建议\ndie Wohnung auf/räumen 收拾屋子\ndie Wäsche waschen 洗衣服\ndas Abendessen vor/bereiten\n(er bereitet vor)\n准备晚餐\nden Stress ab/bauen 减压\nwenig fern/sehen 少看电视\nirgendwo an/kommen 到达某地\njdn. ab/holen 接某人"}, {"page": 6, "text": "6\nII. Präpositionen\ndas Handy aus/schalten 关闭手机\netw.N findet statt 某活动如期举行\nFlyer verteilen 分发传单\nden Termin verschieben 推迟日程\njdn. vertreten\n(er vertritt)\n代表/代替某人\nauf ...(Akk.) verzichten\n(er verzichtet)\n放弃某事\ndie Hausaufgabe vergessen\n(er vergisst)\n忘记作业\nden Bus verpassen 错过公共汽车\ndiese Woche 这周\nnächste Woche 下周\naus China kommen 来自中国\nvon hier kommen 来自本地\nauf der Speisekarte 菜单上\nin Shanghai leben 在上海生活\nim Wohnheim wohnen 住在宿舍\nin der Mitte 在中间\nin der Nähe 在附近\nin Ordnung 可以，没问题\nim Internet 在网上\nim Sonderangebot 特价\nins Kino gehen 去看电影\nins Fitnessstudio gehen 去健身房\nin der Mensa essen 在食堂吃饭\nin die Mensa gehen 去食堂吃饭\nin der Bibliothek recherchieren 在图书馆查找资料\nin die Bibliothek gehen 去图书馆\nim Restaurant essen 在饭店吃饭\nins Restaurant gehen 去饭店吃饭\nim Supermarkt einkaufen 在超市采购\nin den Supermarkt gehen 去超市"}, {"page": 7, "text": "7\nin der Stadt leben 住在城里\nin die Stadt fahren 进城\nim Park ein Picknick machen 在公园里野餐\nin den Park gehen 去公园\nim Buchladen lesen 在书店看书\nin den Buchladen gehen 去书店\nim Bett schlafen 在床上睡觉\nins Bett gehen 上床睡觉\nauf dem Markt einkaufen 在市场买菜\nauf den Markt gehen 去市场\nan der Kasse schlange stehen 在收银台排队\nan die Kasse gehen 去收银台\nan der Reihe sein 轮到了\nan die Reihe kommen 轮到\nzur Arbeit gehen 去上班\nzum Unterricht gehen 去上课\nzum Picknick gehen 去野餐\nnach Deutschland reisen 去德国旅行\neine Reise nach Deutschland machen 去德国旅行\nzu Hause sein / bleiben （呆）在家\nnach Hause gehen 回家\nin der Freizeit 在业余时间\nin zwei Wochen 两周后\nim Voraus 事先\nim Jahr 一年\nim Monat 一个月\nin der Woche 一周\nam Dienstag 在周二\nam Vormittag 在上午\nam Wochenende 在周末\nin der Nacht 在深夜\num 8 Uhr 在 8 点\nmit jdm. telefonieren 与某人通电话\nNudeln mit Pilzen 菌菇面"}, {"page": 8, "text": "8\nan der Tongji-Universität ... studieren 在同济大学修读……专业\neine Nachricht an jdn. schreiben 给某人发消息\ndas Essen über die Handy-App (nach\nHause) bestellen\n通过手机应用点餐（外卖到家）\nüber ...(Akk.) sprechen 谈论某事\nvon ...(Dat.) sprechen 谈及某事\nzu Ende sein 结束\nzu Ende gehen 结束\nzum Beispiel 例如\netw.N gehört zu etw.D ……属于……的一部分\netw.N wird zu etw.D ……（升级）成为……\nbei Huawei arbeiten 在华为工作\naus Baumwolle 棉质\nEs geht um ...(Akk.) 主题是……\njdn. um ...(Akk.) bitten 向某人祈求某物\n(keine) Zeit für ... haben （没）有时间……\nfür ... wichtig sein 对于……重要\nfür ... gefährlich und schädlich sein 对于……危险且有害\nvielen Dank für ... 非常感谢……\nsichD Zeit für ... nehmen 为……花时间\n(Geld) für ... aus/geben 为……花多少钱\nauf Englisch 用英语\nauf die Frage antworten\n(er antwortet)\n回答问题\nauf ...(Akk.) warten\n(er wartet)\n等待……\nvon Montag bis Freitag 从周一到周五\nvon acht bis zwölf 从 8 点到 12 点\nvon früh bis spät 从早到晚"}]}, {"name": "B1E6 Vokabeln.pdf", "type": "PDF", "pages": [{"page": 1, "text": "Einheit6Glücklich\nI. Phrasen\netwasN machtjemandemSpaß\njemanden/etwasA Adj.machen\nimInternetsurfen\nFreundetreffen(ertrifft)\ninsKinogehen\neineKomödiean/sehen(ersiehtan)\nModellautosbauen\nBasketballspielen\nSchachspielen\nGitarrespielen\netwasN interessiertjemanden=etwasN begeistertjemanden\ndieKartenaufdasPosterkleben\ndasFotoaus/drucken\ndieKulturverstehen\nPlatznehmen(ernimmt)\nleichterkranken=leichtkrankwerden(erwird)\nMitgliederwerben(erwirbt)\nblassaus/sehen(ersiehtaus)\neinmalinderWoche=jedeWocheeinmal\ndieKonzentrationsfähigkeitfördern\ndieSchlafqualitätverbessern\netwasAgehtjemandemaufdieNerven\ndenKnien/derGesundheitschaden\ngesundab/nehmen(ernimmtab)\nmitjemandemeinInterviewführen\neinenBerichtüberetwasA schreiben\neinEhrenamtaus/üben=ehrenamtlicharbeiten\n=alsFreiwillige(r)arbeiten\netwasAfürdieGesellschafttun\ndenUmgangmitjemandemlernen\nGermanistikstudieren\netwasA saubermachen\nAufgabenselbstständigübernehmen\nvieleKontakteauf/nehmen(ernimmtauf)\nvieleErfahrungensammeln"}, {"page": 2, "text": "anetwasD teil/nehmen(ernimmtteil)\ninetwasA geraten(ergerät)\nStressab/bauen=Stressreduzieren\neineAnforderunganjemandenstellen\nnicht/kein...,sondern...\nnichtnur...,sondernauch...\nzwar...,aber...\nII. Verben mit Dativ\njemandem(beietwasD)helfen\njemandem(füretwasA)danken\njemandem(aufetwasA)antworten\njemandem(zuetwasD)gratulieren\netwasA gefälltjemandem\netwasA schmecktjemandem\netwasA fehltjemandem\netwasA gehörtjemandem\netwasA passtjemandem\netwasA nütztjemandem(viel/etwas/wenig/nichts)\njemandemetwasA geben(ergibt)\njemandemetwasA erklären\njemandemetwasA erzählen\njemandemetwasA zeigen\njemandemetwasA empfehlen(erempfiehlt)\njemandemetwasA bei/bringen=jemandenetwasAlehren\n=jemandeninetwasDunterrichten\njemandemetwasA beschreiben\njemandemHilfeleisten\njemandemGeschichtenvor/lesen(erliestvor)\nIII. Präpositionen\ninderFreizeit\nindenFerien\naufDeutsch\nzurviert\namliebsten"}, {"page": 3, "text": "gut/schädlichfürjemanden/etwasAsein\nbeiunsinDeutschland\nLustauf/zuetwashaben\nAngstvoretwasDhaben\nbeijemandembeliebtsein\naufetwasA/jemandenstolzsein\neinAusgleichzuetwasD\netwasAaus/zumSpaßmachen\nseit2024=seitzweiJahren\neineAufgabeohneBezahlung\ndieSuchenachetwasD\ninMaßen"}]}, {"name": "B1E7 Vokabeln.docx", "type": "DOCX", "paragraphs": ["Einheit 7 Immer was los!", "Phrasen", "einen Spaziergang machen", "ein Referat vor/bereiten", "ein Referat auf Chinesisch halten", "das Referat vor dem Publikum üben", "ein Gesicht wie drei Tage Regenwetter machen", "etwas geht schief", "die Ängste überwinden", "Fremdsprachen sprechen", "etwasA aus dem Internet herunter/laden", "Geld für etwasA aus/geben", "ein Taxi nehmen", "etwasA unternehmen", "Kommunikation", "Macht nichts.", "Ohne Regen kein Leben.", "Viel Erfolg!", "Was ist los?", "Übung macht den Meister.", "Vielen Dank für ...", "Nichts zu danken.", "Präpositionen", "am Himmel keine Wolke", "auf den Straßen", "auf die Idee kommen", "auf ... sinken", "für ... wichtig sein", "für ... zuständig sein", "im Winter", "in der Tat", "in den Sommerferien", "in zwei Wochen", "mit etwasD vertraut sein", "mit der U-Bahn fahren", "Probleme mit etwasD haben", "zum Glück", "zum Unterricht gehen", "zu dem Thema", "zu Fuß gehen / laufen", "Partizip II"]}, {"name": "B1E8 Vokabeln.pdf", "type": "PDF", "pages": [{"page": 1, "text": "1\nEinheit 8 Ich wohne gern hier!\nI. Vokablen\nTeilA\netwasA inOrdnungbringen 整理，使……有序\netwasN istinOrdnung=etwasN istordentlich 某物整齐有序\nordnenVt;derOrdner-\nirgendwoherrschtChaos(chaotischAdj.) 某处混乱，杂乱无章\neinige=mehrere=einpaar 一些\neineMenge 大量\n(inetwasA)ein/treten(ertrittein,isteingetreten) 进入，入场\nDer Lehrer ist ins Klassenzimmer eingetreten.\nderEintritt-e;dieEintrittskarte-n\nmitetwasD an/fangen(erfängtan,hatangefangen) 开始做某事\nWann fangen wir mit der Arbeit an?\nderAnfang,dieAnfänge(amAnfang);derAnfänger-\njemandenanetwasA erinnern 提醒某人想起某事\nDer Klassensprecher erinnert mich an den Termin.\nDas Lied erinnert ihn immer an sie.\ndieErinnerung-en\netwasA behalten(erbehält;behielt,hatbehalten) 保留\nDas Buch / Die Karten kannst du behalten.\neffizie．ntAdj. 高效的\nDer Roboter arbeitet schnell und effizient.\ndieEffizienz-en\nvorallem 首先，特别是\ndieAufmerksamkeiterhöhen 提高注意力\ndieArbeitsmotivationsteigern 提升工作积极性\netwasA aufetwasA reduzieren 把……降低到……\ndieFreiheitein/schränken 限制自由\ndieDenkfähigkeitbeeinträchtigen 损害思维能力\ndenSchreibtischreinigen 清洁办公桌\ndasZimmersaubermachen 打扫房间\ndasZimmerum/stellen 重新放置房间物品位置\ndasZimmerrenovieren 翻新房间\ndasZimmerauf/räumen 收拾整理房间\netwasA weg/räumen 把某物清理走"}, {"page": 2, "text": "2\ndenNachttischausdemZimmerräumen 把床头柜移出房间\n(jemandem)etwasA weg/nehmen 拿走某人某物\netwasA vermeiden(ervermeidet,vermied,hatvermieden) 避免某物或某事\netwasA fest/stellen （经过调查研究）确认\netwasA aus/probieren 尝试\nIhr könnt diese Methode ausprobieren.\ndieChanceverpassen 错过机会\njemandenberuhigen 安抚某人\ndieLauneverbessern 改善情绪\nfürjemanden/etwasA sorgen 照顾某人或某物\nPflanzen sorgen für gute Luft.\netwasA indieentsprechendenOrdnersortieren 把某物归类到相应的文件夹\neinenpositivenEindruck(aufjemanden)machen （给某人）留下一个好印象\ndasBuchbenutzen 使用这本书\nRegisterverwenden 使用索引\nOrdnungschaffenundhalten 创造并保持秩序\netwasGrünes 一些绿植\netwasNliegtaufderHand 某事显而易见\nTeilB\netwasA teilen 分；分享\nIch teile den Kuchen in acht Stücke.\nMein Bruder und ich mussten uns früher ein Zimmer teilen.\nIch teile deine Meinung zu diesem Thema.\naufdiese(Artund)Weise 以这种方法\njemandenvonetwasD überzeugen 劝说某人相信某事\njemandenzuetwasD überreden 劝说某人去做某事\njemandenzuetwasD zwingen 强迫某人做某事\netwasN hängtmitetwasD zusammen 某事与某事相关联\nimZentrumwohnen 住在市中心\nmitjemandem/etwasD zurecht/kommen 和某人合得来；能胜任\nkreuzundquer 横七竖八\nabundzu 偶尔\nüberjemanden/etwasAbestimmen 有权支配某人或某物\nmehrPlatzschaffen 腾出空间\netwasN führtzuetwasD 导致\netwasN sorgtfüretwasA 导致"}, {"page": 3, "text": "3\ninBezugaufetwasA 关于\nallesweg/werfen 把所有东西都丢弃\nanetwasDvorbei/gehen 路过\nbeietwasDvorbei/gehen 顺道拜访\nTeilC\netwasN istaußerBetrieb 某物不在运行中\netwasN istinBetrieb 某物在运行中\ninderfünftenEtage 在 6楼\nimfünftenStock 在 6楼\nnachSüdengehen 朝南；往南走\ndiePflanzenpflegen 照料植物\naufdemSofasitzen 坐在长沙发上\nindemSesselsitzen 坐在单人沙发上\netwasNpasstzuetwasD 某物与某物相配\netwasNpasstirgendwohin 某物放得进……\ndieKlimaanlageein/schalten 打开空调\ndieKlimaanlageaus/schalten 关闭空调\nguteQualitätversprechen 质量保障\netwasN wirktirgendwieaufjemanden 某物对某人产生某种影响\netwasAbetrachten(=etwasAan/sehen) 打量\nTeilD\ninderStadtwohnen 住在城里\naufdemLandwohnen 住在农村\nvielunternehmen 有很多方式进行娱乐\ninsMuseumgehen 去博物馆\neineAusstellungbesuchen 去看展\neinKulturangebotwahr/nehmen 感受体验文化活动\nindieNaturgehen 去亲近大自然\nimStaustecken 堵车\nmitdemRadalleserreichen 骑车抵达所有地方\nirgendwoauf/wachsen(erwächstauf) 长大\nIch bin auf dem Land aufgewachsen.\ninderKindheit 在童年\nderengeKontaktzurNatur 与自然的紧密联系"}, {"page": 4, "text": "4\nII. Kommunikation\nA.\nIchhabeeinProblem. 我有一个麻烦。\nDasdarfnichtwahrsein. 这不是真的！（我不接受）\nWasmeinenSiedazu? 您对此怎么看？\nWasmeinenSiedamit? 您这话什么意思？\nDasistsehrnettvondir. 你真好。\nB.\nWohinkommtderTisch? 桌子放哪儿?\nWohinsollderTisch?\nWohinstellenwirdenTisch?\nWohinsollmandenTischstellen?\nWohinmitdemTisch?\nC. nachdemWegfragen\n· Entschuldigung/Verzeihung!\n· EntschuldigenSie/VerzeihenSie!\n· Wo ist dieTongji-Universität?\n· Wo liegt dieTongji-Universität?\n· Wo befindet sich dieTongji-Universität?\n· Wie komme ich zu derTongji-Universität?\n· Wie kommt man zu derTongji-Universität?\n· Wie finde ich dieTongji-Universität?\n· Wie kann ich dieTongji-Universitätfinden?\n· Wissen Sie vielleicht,wo...ist?\n· Können Sie mir sagen,wieichzu...komme?\n· Ich möchte zu ...Wie komme ich dorthin/dahin?\nC. denWegbeschreiben\n· Tutmirleid.Ichbinauchfremdhier.\n· Tutmirleid.Ichbinauchnichtvonhier.\n· Esistnichtweitvonhier.\n· EsistganzinderNähe.\n· SiekönnenzuFußgehen."}, {"page": 5, "text": "5\n· Esistsehrweitentfernt.\n· SiemüssendenBusnehmen.\n· SiemüssenmitdemBusfahren.\n· dieerste/zweite/dritte...Straße\n· dieerste/zweite/dritte...Querstraße\n· dieerste/zweite/dritte...Kreuzung\n· dieerste/zweite/dritte...Ampel\n· dienächste...\n· dieübernächste...\n· geradeausgehen\n· nachlinksgehen/abbiegen\n· nachrechtsgehen/abbiegen\n· die nächste Kreuzung nachlinksgehen/abbiegen\n· an der nächsten Kreuzung nachlinksgehen/abbiegen\n· GehenSieimmergeradeausbiszu...\n· GehenSiedieStraßeentlangbiszu...\n· DannbiegenSie...(nach)links/rechts(indie..straße)ab.\n· GehenSieüberdieBrücke/durchdasStadttor/an...vorbei.\n· Nach100Metern/Nach15MinutensehenSie...\n· ...istgeradeneben/vor/hinter/gegenüber...\n· ...istaufderlinken/rechtenSeite.\n· NehmenSiedenBusLinie...inRichtung...undfahrenbiszu...\n· An.../Dort/DasteigenSiein...um/ein.\n· Mit...fahrenSiexStationenweiterbiszu...\nIII. Wechselpräpositionen\nBewegung Zustand\nIchsetzedasKindaufdenStuhl. DasKind\nIchhängedasFotoandieWand. DasFoto\nIchhängedenMantelindenSchrank. DerMantel\nIchstelledasBettnebendenSchrank. DasBett\nIchstelledieBücherinsBücherregal. DieBücher\nIchlegedieBücheraufdenTisch. DieBücher"}, {"page": 6, "text": "6\nIchlegedieKleiderindieKommode. DieKleider\nIchsteckedieRosenindieVase. DieRosen\nIch DerTischstehtamFenster.\nIch DieLampehängtüberdemSchreibtisch.\nIch DerKofferliegtunterdemBett.\nIch DerSteckerstecktinderSteckdose.\nIch Das Kind sitzt zwischen seinem Vater\nundseinerMutter.\nIch Ichsitzehinterdir.\nWirsetzenunsum________Tisch. Wirsitzenum________Tisch.\nWirgehenauf________Party. Wirtanzenauf________Party.\nWirgehenin________Küche. Wirkochenin________Küche.\nWirfahrenauf________Land. Wirwohnenauf________Land.\nWirfahrenin________Stadt. Wirkaufenin________Stadtein.\nWirreisen________Deutschland. Wirfotografieren________Deutschland.\nWirreisen________________Schweiz. Wir fotografieren ________ ________\nSchweiz.\nIchgehe________Hause. Icharbeite________Hause."}]}, {"name": "Perfekt Arbeitsblatt (1).pdf", "type": "PDF", "pages": [{"page": 1, "text": "Einheit 7 Grammatik\nPerfekt\nden 30.4.2026\nI. Gebrauch\nWir sprechen über die Gegenwart und die Zukunft: Präsens und Futur\nWir sprechen über die Vergangenheit: Präteritum und Perfekt\nII. Bildung\nPosition 1 Position 2 Satzende\nWas hast du gemacht?\nIch habe den Aufsatz geschrieben.\nHabt ihr dieAufgaben gemacht?\nPerfekt: haben / sein ... Partizip II\nSatzklammer\nÜbung 1 Welche Verben bilden das Perfekt mit dem Hilfsverb „sein“? Ordnen Sie zu.\n请将下列完成时搭配 sein 的动词按照类型分类。\n提示：下列单词为第 1-7 单元中出现的完成时搭配 sein 的动词，粗体单词为\n第 7 单元未学单词。\nbleiben, erkranken, erscheinen, fahren(Vi.), gehen, gelingen, geraten, geschehen,\njoggen, kommen, passieren, reisen, *schwimmen, sein, sinken, spazieren, steigen,\nsterben, *surfen, wachsen, werden, ziehen(Vi.),\nabfahren, ankommen, auffallen, aufstehen, ausrutschen, durchgehen,\neinschlafen, hingehen, losgehen, mitkommen, nachgehen, reinkommen,\nweitergehen, zurückfahren, zurückkommen\nA. Verben der Bewegung (表示位置改变的不及物动词)\nB. Verben mit Nominativ (表示状态改变的不及物动词)\nC. Verben der Zustandsänderung (支配第一格的系动词)"}, {"page": 2, "text": "III. Partizip II\n1. Partizip II. der regelmäßigen Verben\nA. ge + Verbstamm + (e)t\nÜbung 2 Wie sagt man im Perfekt?\n1. Ich kaufe eine Wohnung.\n2. Warum fragst du mich nicht?\n3. Hans lernt Deutsch.\n4. Macht ihr Übungen?\n5. Meine Freunde schenken mir ein Buch.\n6. Wir hören den neuen Text.\n7. Antworten Sie auf meine Frage?\nB. Verbstamm + t\nPartizip II. der Verben mit festen Präfixen\nPartizip II. der Verben, die mit „-ieren“ enden\nUntrennbare Präfixe（不可分前缀）: be-, ge-, ver-, zer-, ent-, emp-, er-, (miss-, hinter-)\nTrennbare Präfixe（可分前缀）: ein-, aus-\nauf-, zu-,\nab-, an-,\nvor-, nach-,\nmit-, bei-, los-, weg-, zurück-, zusammen-\nSonderfälle（有时可分有时不可分）：über-, unter-, um-, durch-, wider-\nÜbung 3 Ergänzen Sie die Verben in richtiger Form.\nbesuchen, entschuldigen, übersetzen, verkaufen, wiederholen\n1. Meine Freunde studieren in Hangzhou. Am letzten Wochenende habe ich sie\n__________.\n2. Ich habe ein neues Fahrrad gekauft und habe deshalb das alte online __________.\n3. Ich bin heute krank und liege den ganzen Tag im Bett. Ich habe mich schon vom\nUnterricht __________.\n4. Die Studenten haben nach dem Unterricht den Text __________ und ihn dann\nvom Deutschen ins Chinesische __________.\nÜbung 4 Ergänzen Sie die Verben in richtiger Form.\nfotografieren, gratulieren, probieren, studieren\n1. Jetzt studiert mein Bruder Informatik. Aber früher hat er Maschinenbau\n__________.\n2. Heute habe ich Geburtstag und meine Freunde haben mir dazu __________.\n3. Der Fisch schmeckt wirklich gut! Hast du den schon __________?\n4. Ich habe meine Eltern im Garten __________."}, {"page": 3, "text": "C. Präfix + (ge) + Verbstamm + t\nPartizip II. der trennbaren Verben\nTrennbare Verben sind in den meisten Fällen ungetrennt.\nWir laden morgen Abend viele Gäste zu uns ein.\nWir haben schon viele Gäste eingeladen.\nWir haben vor, noch mehr Gäste einzuladen.\nWir möchten Sie auch gerne einladen.\nWissen Sie, wen wir einladen?\nÜbung 5 Ergänzen Sie die Verben in richtiger Form.\n1. Wir waren gestern im Park. Die Freundin von Max ist auch mit_________. Max\nhat sie uns vor_________.\n2. Die Studenten geben morgen eine Party. Sie haben schon viele Freunde auf die\nParty ein_________. Heute Nachmittag sind sie in den Supermarkt gegangen und\nhaben dort viel ein_________.\n3. Die Hose ist für mich zu klein und ich habe sie um_________.\n4. Die Mutter hat das Essen vor_________ und alle Zimmer auf_________.\n5. Die Mutter hat das Kind schon von der Schule ab_________.\n6. In den Ferien hat Lili ein Ehrenamt aus_________.\n7. + Hat Handyspielen deinen Stress ab_________?\n- Nein. Deshalb habe ich mein Smartphone schon aus_________.\n2. Partizip II. der unregelmäßigen Verben\n(ge) + veränderter Verbstamm + en 强变化\n(ge) + veränderter Verbstamm + t 混合变化\nModalverben als Vollverb\ndenken hat gedacht können hat gekonnt\nbringen hat gebracht dürfen hat gedurft\nwissen hat gewusst müssen hat gemusst\nmögen hat gemocht\nkennen hat gekannt wollen hat gewollt\nnennen hat genannt sollen hat gesollt\nrennen ist gerannt\n"}, {"page": 4, "text": "Infinitiv Partizip II\na - a\nschlafen hat geschlafen\nfahren hat/ist gefahren\nladen hat geladen 装载\nwaschen hat gewaschen 洗\nwachsen ist gewachsen 生长\nhalten hat gehalten\nfallen ist gefallen 掉落\ngefallen hat gefallen\nlaufen ist gelaufen\nraten hat geraten\ngeraten ist geraten\nbacken hat gebacken\ntragen hat getragen\nschaffen hat geschaffen 创造\nschlagen hat geschlagen 击，打\nInfinitiv Partizip II\no - o\nkommen ist gekommen\nInfinitiv Partizip II\nu - u\nrufen hat gerufen\nu - a\ntun hat getan"}, {"page": 5, "text": "Übung 6 Ergänzen Sie die Verben haben und sein und beachten Sie die Zeitformen.\n用 haben, sein 的正确时态填空。\nGestern __________ ich keinen Unterricht. Das Wetter __________ schön. Ich\n__________ in Hangzhou. Gegen 13 Uhr __________ ich da. Ich __________\nHunger, denn es __________ schon spät. Viele Restaurants __________ keinen Platz\nmehr. Aber ich __________ Glück. Das Restaurant „Lou Wai Lou“ __________ noch\nPlätze. Nach dem Essen __________ ich am Westsee und in der Altstadt. Das\n__________ wirklich ein schöner Tag. Und jetzt __________ ich wieder zurück und\n__________ vielArbeit.\nÜbung 7 Ergänzen Sie die Modalverben im Präteritum.\n填入情态动词的过去时\n1. Gestern __________ ich ins Kino gehen. Aber ich __________ das nicht. Ich\n__________ zuerst meine Hausaufgaben fertig machen.\n2. Mit fünf Jahren __________ Jonas schon Klavier spielen. Aber er __________ es\ngar nicht.\n3. Die Studenten __________ zu Frau Heinrich gehen. Das hat Frau Heinrich\ngesagt.\n4. Früher __________ ich Popmusik. Aber jetzt höre ich lieber die klassische\nMusik."}]}, {"name": "Perfekt Arbeitsblatt II (1).pdf", "type": "PDF", "pages": [{"page": 1, "text": "Partizip II.\n1. Partizip II. der unregelmäßigen Verben\n(ge) + veränderter Verbstamm + en 强变化\nInfinitiv Partizip II\na-a\nschlafen hat geschlafen\nfahren hat/ist gefahren\nladen hat geladen 装载\nwaschen hat gewaschen 洗\nwachsen ist gewachsen 生长\nhalten hat gehalten\nfallen ist gefallen 掉落\ngefallen hat gefallen\nlaufen ist gelaufen\nraten hat geraten\ngeraten ist geraten\n"}, {"page": 2, "text": "backen hat gebacken\ntragen hat getragen\nschaffen hat geschaffen 创造\nschlagen hat geschlagen 击，打\ne-a e-e e-o\nstehen hat gestanden essen hat gegessen helfen hat geholfen\ngehen ist gegangen geben hat gegeben nehmen hat genommen\nlesen hat gelesen sprechen hat gesprochen\nsehen hat gesehen werden ist geworden\ntreten ist getreten 踏；走 werben hat geworben\nsterben ist gestorben 死亡\ntreffen hat getroffen\nei-ie\nbleiben ist geblieben\nschreiben hat geschrieben\ntreiben hat getrieben\nsteigen ist gestiegen 攀登\nverzeihen hat verziehen 原谅\nvermeiden hat vermieden 避免\nscheinen hat geschienen\nerscheinen ist erschienen\naber:\nheißen hat geheißen\nvergleichen hat verglichen"}, {"page": 3, "text": "sein ist gewesen\ni-e i-o i-u\nbitten hat gebeten beginnen hat begonnen finden hat gefunden\nsitzen hat gesessen gewinnen hat gewonnen singen hat gesungen\nschwimmen hat/ist geschwommen trinken hat getrunken\nspringen ist gesprungen 跳\nsinken ist gesunken\nüberwinden hat überwunden\nklingen hat geklungen\ngelingen ist gelungen\nie-o o-o u-u\ngenießen hat genossen kommen ist gekommen rufen hat gerufen\nverlieren hat verloren\nbieten hat geboten u-a\nverbieten hat verboten tun hat getan\nverschieben hat verschoben\nüberwiegen hat überwogen\nziehen hat/ist gezogen\nfliegen ist geflogen 飞\nschließen hat geschlossen\naber:\nliegen hat gelegen"}, {"page": 4, "text": "(ge) + veränderter Verbstamm + t 混合变化\nModalverben als Vollverb\ndenken hat gedacht können hat gekonnt\nbringen hat gebracht dürfen hat gedurft\nwissen hat gewusst müssen hat gemusst\nmögen hat gemocht\nkennen hat gekannt wollen hat gewollt\nnennen hat genannt sollen hat gesollt\nrennen ist gerannt\nÜbung 1 Bilden Sie Partizipien II. 请构成下列动词的过去分词。\n1. hören 2. fragen 3. danken 4. arbeiten 5. surfen\n6. spielen 7. leben 8. kaufen 9. vorstellen 10. fotografieren\n11. übersetzen 12. probieren 13. besuchen 14. verkaufen 15. antworten\nÜbung 2 Bilden Sie Sätze im Perfekt. 将下列句子改成现在完成时\n1. Ich reise in die Schweiz. 2. Die Studentin liest ein Buch.\n3. Die Frau schreibt einen Brief. 4. Wir bleiben zu Hause.\n5. Fahren Sie nach Hause? 6. Er lädt uns zum Essen ein.\n7. Gehst du ins Kino? 8.Am Abend sehen wir fern.\n9. Wohin geht ihr? 10. Sie fliegt nach Europa.\n11. Der Lehrer empfiehlt mir einen Film. 12. Der Zug kommt um 8 Uhr an."}, {"page": 5, "text": "13. Wo isst du zu Mittag? 14. Der Mann springt ins Wasser.\n15. Das Spiel gefällt mir sehr. 16. Ich bin den ganzen Tag zu Hause.\n17. Nach dem Studium wird er Lehrer. 18. Die Tochter zieht ins Wohnheim ein.\nÜbung 3 Ergänzen Sie die Verben im Perfekt.\n1. A: Wollen Sie die Zeitung lesen? B: Nein danke, ich __________ sie schon __________.\n2. A: Geben Sie ihm bitte das Buch! B: Ich __________ es ihm doch schon __________.\n3. A: Wo __________ du den ganzen Nachmittag __________? B: Ich war bei Herrn Pöppelmann.\n4. A: Peter hat heute Geburtstag. __________ du ihm schon __________? B: Nein, ich gratuliere ihm jetzt.\n5. A: Schreiben Sie die E-Mail? B: Ich __________ sie schon __________.\n6. Früher __________ ich das nicht __________, aber jetzt weiß ich es genau.\n7. Gestern __________ ich dir __________, aber heute kann ich dir leider nicht helfen.\n8. A: Darf ich noch etwas essen, Mutti? B: Nein, du __________ schon viel __________.\n9. A: Wann bringt ihr uns die Bücher mit? B: Wir __________ sie euch schon __________.\n10. Früher __________ ich einen Hund __________. Aber jetzt halte ich eine Katze.\n11. Ich tue so etwas nicht. Wer __________ das denn __________?\n12. Heute __________ ich meine Geldtasche nicht __________. Vielleicht finde ich sie morgen.\n13. Zuerst __________ es mir in Shanghai nicht __________, aber jetzt gefällt es mir hier sehr gut.\n14. Heute bleiben wir nicht lange im Klassenzimmer, denn wir __________ gestern zu lange dort __________.\n15. A: Morgen wird es warm. B: Es __________ schon warm __________."}]}];
+const VOCAB = [{"raw": "Lieder singen 唱歌", "unit": "E1–E5"}, {"raw": "Musik hören 听音乐", "unit": "E1–E5"}, {"raw": "gern reisen 喜欢旅行", "unit": "E1–E5"}, {"raw": "Übungen machen 做练习", "unit": "E1–E5"}, {"raw": "Deutsch lernen 学习德语", "unit": "E1–E5"}, {"raw": "Wörter buchstabieren 拼单词", "unit": "E1–E5"}, {"raw": "Texte wiederholen 复习课文", "unit": "E1–E5"}, {"raw": "Deutschland kennen 了解德国", "unit": "E1–E5"}, {"raw": "die Lehrerin fragen 问老师", "unit": "E1–E5"}, {"raw": "ein Foto zeigen 展示一张照片", "unit": "E1–E5"}, {"raw": "Taiji machen / üben 打太极拳", "unit": "E1–E5"}, {"raw": "nichts sagen 什么都没说", "unit": "E1–E5"}, {"raw": "Blogs schreiben 写博客", "unit": "E1–E5"}, {"raw": "Fußball spielen 踢足球", "unit": "E1–E5"}, {"raw": "Klavier spielen 弹钢琴", "unit": "E1–E5"}, {"raw": "Beispiele nennen 举例", "unit": "E1–E5"}, {"raw": "oft joggen 经常慢跑", "unit": "E1–E5"}, {"raw": "eine Karte ziehen 抽出一张卡片", "unit": "E1–E5"}, {"raw": "Fehler machen 犯错", "unit": "E1–E5"}, {"raw": "eine Rolle spielen 扮演一个角色", "unit": "E1–E5"}, {"raw": "ein paar (= einige) 一些", "unit": "E1–E5"}, {"raw": "zu Abend essen 吃晚餐", "unit": "E1–E5"}, {"raw": "vegetarisch essen 素食", "unit": "E1–E5"}, {"raw": "gesund essen 吃得健康", "unit": "E1–E5"}, {"raw": "jdm. (bei etw.D) helfen 帮助某人（做某事）", "unit": "E1–E5"}, {"raw": "es gibt +Akk. 有，存在", "unit": "E1–E5"}, {"raw": "Sport machen / treiben 做运动", "unit": "E1–E5"}, {"raw": "eine Vorlesung haben 有大课", "unit": "E1–E5"}, {"raw": "einen Termin haben 有约，有安排", "unit": "E1–E5"}, {"raw": "ein Problem haben 有麻烦，有问题", "unit": "E1–E5"}, {"raw": "Hunger haben (= hungrig sein) 饿了", "unit": "E1–E5"}, {"raw": "Recht haben 说得对", "unit": "E1–E5"}, {"raw": "eine gute Idee 一个好主意", "unit": "E1–E5"}, {"raw": "die Kultur kennen lernen 了解文化", "unit": "E1–E5"}, {"raw": "die Hausaufgaben schreiben / machen 做作业", "unit": "E1–E5"}, {"raw": "Tut mir leid. 我很抱歉。", "unit": "E1–E5"}, {"raw": "jdm. Bescheid sagen 告知某人（某事）", "unit": "E1–E5"}, {"raw": "jeden Tag (= täglich) 每天", "unit": "E1–E5"}, {"raw": "das Essen bestellen 点菜", "unit": "E1–E5"}, {"raw": "alles auf/essen 全都吃完", "unit": "E1–E5"}, {"raw": "kleine Portionen an/bieten 提供小份食物", "unit": "E1–E5"}, {"raw": "Lebensmittel sparen 节约食物", "unit": "E1–E5"}, {"raw": "zusammen / getrennt zahlen 一起/分开支付", "unit": "E1–E5"}, {"raw": "bis 10 zählen 数到 10", "unit": "E1–E5"}, {"raw": "noch einmal / mal 再一次", "unit": "E1–E5"}, {"raw": "das nächste Mal 下次", "unit": "E1–E5"}, {"raw": "einkaufen gehen 去购物", "unit": "E1–E5"}, {"raw": "Einkäufe machen 采购", "unit": "E1–E5"}, {"raw": "alles haben 什么都有", "unit": "E1–E5"}, {"raw": "nichts brauchen 什么都不需要", "unit": "E1–E5"}, {"raw": "den Apfel probieren 试吃苹果", "unit": "E1–E5"}, {"raw": "Schlange stehen 排队", "unit": "E1–E5"}, {"raw": "eine Torte backen 烘焙一个蛋糕", "unit": "E1–E5"}, {"raw": "Medizin nehmen 吃药", "unit": "E1–E5"}, {"raw": "viel Müll produzieren 制造很多垃圾", "unit": "E1–E5"}, {"raw": "Kein Problem! 没问题！", "unit": "E1–E5"}, {"raw": "Macht nichts. 没关系。", "unit": "E1–E5"}, {"raw": "Das macht zusammen ... 共计……", "unit": "E1–E5"}, {"raw": "Einen schönen Tag (noch). 祝（您/你）今天过得愉快！", "unit": "E1–E5"}, {"raw": "Gleichfalls! 您/你也一样！", "unit": "E1–E5"}, {"raw": "ein Beutel Toastbrot 一袋吐司面包", "unit": "E1–E5"}, {"raw": "ein Bund Bananen 一串香蕉", "unit": "E1–E5"}, {"raw": "ein Netz Orangen 一网兜橙子", "unit": "E1–E5"}, {"raw": "zwei Glas Marmelade 两瓶果酱", "unit": "E1–E5"}, {"raw": "ein Stück Käse 一块奶酪", "unit": "E1–E5"}, {"raw": "eine Packung Schinken 一包火腿", "unit": "E1–E5"}, {"raw": "eine Tafel Schokolade 一板巧克力", "unit": "E1–E5"}, {"raw": "zwei Tüten Chips 两袋薯片", "unit": "E1–E5"}, {"raw": "eine Schale Erdbeeren 一盒草莓", "unit": "E1–E5"}, {"raw": "eine Packung Milch 一盒牛奶", "unit": "E1–E5"}, {"raw": "eine Flasche Wasser 一瓶水", "unit": "E1–E5"}, {"raw": "eine Dose Cola 一听可乐", "unit": "E1–E5"}, {"raw": "ein bisschen (= ein wenig) 一点", "unit": "E1–E5"}, {"raw": "Es ist nett von dir. 你真好。", "unit": "E1–E5"}, {"raw": "jdn. interessieren 让某人感兴趣", "unit": "E1–E5"}, {"raw": "jdn. freuen 让某人高兴", "unit": "E1–E5"}, {"raw": "jdn. an/rufen 给某人打电话", "unit": "E1–E5"}, {"raw": "jdn. besuchen 拜访某人", "unit": "E1–E5"}, {"raw": "eine Karte besorgen 搞一张票/卡", "unit": "E1–E5"}, {"raw": "den Haushalt machen 做家务", "unit": "E1–E5"}, {"raw": "nichts / etwas / viel vor/haben 没有安排/有些安排/有很多安排", "unit": "E1–E5"}, {"raw": "früh auf/stehen 早起", "unit": "E1–E5"}, {"raw": "im Unterricht gut auf/passen 在课堂上集中注意力", "unit": "E1–E5"}, {"raw": "einen Film an/sehen 观看一部电影", "unit": "E1–E5"}, {"raw": "schnell ein/schlafen 快速入睡", "unit": "E1–E5"}, {"raw": "(eine) Pause machen 休息", "unit": "E1–E5"}, {"raw": "im Internet surfen 上网", "unit": "E1–E5"}, {"raw": "spazieren gehen 去散步", "unit": "E1–E5"}, {"raw": "eine Bachelorarbeit betreuen 辅导一篇学士论文", "unit": "E1–E5"}, {"raw": "Geld verdienen 赚钱", "unit": "E1–E5"}, {"raw": "Nachhilfeunterricht geben 作为家教给别人补课", "unit": "E1–E5"}, {"raw": "Nachhilfeunterricht bekommen 补课", "unit": "E1–E5"}, {"raw": "die Freizeit genießen 享受业余时间", "unit": "E1–E5"}, {"raw": "etw.N macht jdm. Spaß 某事给某人带来乐趣", "unit": "E1–E5"}, {"raw": "zu spät kommen 迟到", "unit": "E1–E5"}, {"raw": "Platz nehmen 就坐", "unit": "E1–E5"}, {"raw": "jdm. einen Vorschlag machen 给某人提一个建议", "unit": "E1–E5"}, {"raw": "die Wohnung auf/räumen 收拾屋子", "unit": "E1–E5"}, {"raw": "die Wäsche waschen 洗衣服", "unit": "E1–E5"}, {"raw": "den Stress ab/bauen 减压", "unit": "E1–E5"}, {"raw": "wenig fern/sehen 少看电视", "unit": "E1–E5"}, {"raw": "irgendwo an/kommen 到达某地", "unit": "E1–E5"}, {"raw": "jdn. ab/holen 接某人", "unit": "E1–E5"}, {"raw": "das Handy aus/schalten 关闭手机", "unit": "E1–E5"}, {"raw": "etw.N findet statt 某活动如期举行", "unit": "E1–E5"}, {"raw": "Flyer verteilen 分发传单", "unit": "E1–E5"}, {"raw": "den Termin verschieben 推迟日程", "unit": "E1–E5"}, {"raw": "den Bus verpassen 错过公共汽车", "unit": "E1–E5"}, {"raw": "diese Woche 这周", "unit": "E1–E5"}, {"raw": "nächste Woche 下周", "unit": "E1–E5"}, {"raw": "aus China kommen 来自中国", "unit": "E1–E5"}, {"raw": "von hier kommen 来自本地", "unit": "E1–E5"}, {"raw": "auf der Speisekarte 菜单上", "unit": "E1–E5"}, {"raw": "in Shanghai leben 在上海生活", "unit": "E1–E5"}, {"raw": "im Wohnheim wohnen 住在宿舍", "unit": "E1–E5"}, {"raw": "in der Mitte 在中间", "unit": "E1–E5"}, {"raw": "in der Nähe 在附近", "unit": "E1–E5"}, {"raw": "in Ordnung 可以，没问题", "unit": "E1–E5"}, {"raw": "im Internet 在网上", "unit": "E1–E5"}, {"raw": "im Sonderangebot 特价", "unit": "E1–E5"}, {"raw": "ins Kino gehen 去看电影", "unit": "E1–E5"}, {"raw": "ins Fitnessstudio gehen 去健身房", "unit": "E1–E5"}, {"raw": "in der Mensa essen 在食堂吃饭", "unit": "E1–E5"}, {"raw": "in die Mensa gehen 去食堂吃饭", "unit": "E1–E5"}, {"raw": "in der Bibliothek recherchieren 在图书馆查找资料", "unit": "E1–E5"}, {"raw": "in die Bibliothek gehen 去图书馆", "unit": "E1–E5"}, {"raw": "im Restaurant essen 在饭店吃饭", "unit": "E1–E5"}, {"raw": "ins Restaurant gehen 去饭店吃饭", "unit": "E1–E5"}, {"raw": "im Supermarkt einkaufen 在超市采购", "unit": "E1–E5"}, {"raw": "in den Supermarkt gehen 去超市", "unit": "E1–E5"}, {"raw": "in der Stadt leben 住在城里", "unit": "E1–E5"}, {"raw": "in die Stadt fahren 进城", "unit": "E1–E5"}, {"raw": "im Park ein Picknick machen 在公园里野餐", "unit": "E1–E5"}, {"raw": "in den Park gehen 去公园", "unit": "E1–E5"}, {"raw": "im Buchladen lesen 在书店看书", "unit": "E1–E5"}, {"raw": "in den Buchladen gehen 去书店", "unit": "E1–E5"}, {"raw": "im Bett schlafen 在床上睡觉", "unit": "E1–E5"}, {"raw": "ins Bett gehen 上床睡觉", "unit": "E1–E5"}, {"raw": "auf dem Markt einkaufen 在市场买菜", "unit": "E1–E5"}, {"raw": "auf den Markt gehen 去市场", "unit": "E1–E5"}, {"raw": "an der Kasse schlange stehen 在收银台排队", "unit": "E1–E5"}, {"raw": "an die Kasse gehen 去收银台", "unit": "E1–E5"}, {"raw": "an der Reihe sein 轮到了", "unit": "E1–E5"}, {"raw": "an die Reihe kommen 轮到", "unit": "E1–E5"}, {"raw": "zur Arbeit gehen 去上班", "unit": "E1–E5"}, {"raw": "zum Unterricht gehen 去上课", "unit": "E1–E5"}, {"raw": "zum Picknick gehen 去野餐", "unit": "E1–E5"}, {"raw": "nach Deutschland reisen 去德国旅行", "unit": "E1–E5"}, {"raw": "eine Reise nach Deutschland machen 去德国旅行", "unit": "E1–E5"}, {"raw": "zu Hause sein / bleiben （呆）在家", "unit": "E1–E5"}, {"raw": "nach Hause gehen 回家", "unit": "E1–E5"}, {"raw": "in der Freizeit 在业余时间", "unit": "E1–E5"}, {"raw": "in zwei Wochen 两周后", "unit": "E1–E5"}, {"raw": "im Voraus 事先", "unit": "E1–E5"}, {"raw": "im Jahr 一年", "unit": "E1–E5"}, {"raw": "im Monat 一个月", "unit": "E1–E5"}, {"raw": "in der Woche 一周", "unit": "E1–E5"}, {"raw": "am Dienstag 在周二", "unit": "E1–E5"}, {"raw": "am Vormittag 在上午", "unit": "E1–E5"}, {"raw": "am Wochenende 在周末", "unit": "E1–E5"}, {"raw": "in der Nacht 在深夜", "unit": "E1–E5"}, {"raw": "um 8 Uhr 在 8 点", "unit": "E1–E5"}, {"raw": "mit jdm. telefonieren 与某人通电话", "unit": "E1–E5"}, {"raw": "Nudeln mit Pilzen 菌菇面", "unit": "E1–E5"}, {"raw": "an der Tongji-Universität ... studieren 在同济大学修读……专业", "unit": "E1–E5"}, {"raw": "eine Nachricht an jdn. schreiben 给某人发消息", "unit": "E1–E5"}, {"raw": "über ...(Akk.) sprechen 谈论某事", "unit": "E1–E5"}, {"raw": "von ...(Dat.) sprechen 谈及某事", "unit": "E1–E5"}, {"raw": "zu Ende sein 结束", "unit": "E1–E5"}, {"raw": "zu Ende gehen 结束", "unit": "E1–E5"}, {"raw": "zum Beispiel 例如", "unit": "E1–E5"}, {"raw": "etw.N gehört zu etw.D ……属于……的一部分", "unit": "E1–E5"}, {"raw": "etw.N wird zu etw.D ……（升级）成为……", "unit": "E1–E5"}, {"raw": "bei Huawei arbeiten 在华为工作", "unit": "E1–E5"}, {"raw": "aus Baumwolle 棉质", "unit": "E1–E5"}, {"raw": "Es geht um ...(Akk.) 主题是……", "unit": "E1–E5"}, {"raw": "jdn. um ...(Akk.) bitten 向某人祈求某物", "unit": "E1–E5"}, {"raw": "(keine) Zeit für ... haben （没）有时间……", "unit": "E1–E5"}, {"raw": "für ... wichtig sein 对于……重要", "unit": "E1–E5"}, {"raw": "für ... gefährlich und schädlich sein 对于……危险且有害", "unit": "E1–E5"}, {"raw": "vielen Dank für ... 非常感谢……", "unit": "E1–E5"}, {"raw": "sichD Zeit für ... nehmen 为……花时间", "unit": "E1–E5"}, {"raw": "(Geld) für ... aus/geben 为……花多少钱", "unit": "E1–E5"}, {"raw": "auf Englisch 用英语", "unit": "E1–E5"}, {"raw": "von Montag bis Freitag 从周一到周五", "unit": "E1–E5"}, {"raw": "von acht bis zwölf 从 8 点到 12 点", "unit": "E1–E5"}, {"raw": "von früh bis spät 从早到晚", "unit": "E1–E5"}, {"raw": "etwasA inOrdnungbringen 整理，使……有序", "unit": "E8"}, {"raw": "etwasN istinOrdnung=etwasN istordentlich 某物整齐有序", "unit": "E8"}, {"raw": "irgendwoherrschtChaos(chaotischAdj.) 某处混乱，杂乱无章", "unit": "E8"}, {"raw": "einige=mehrere=einpaar 一些", "unit": "E8"}, {"raw": "eineMenge 大量", "unit": "E8"}, {"raw": "(inetwasA)ein/treten(ertrittein,isteingetreten) 进入，入场", "unit": "E8"}, {"raw": "mitetwasD an/fangen(erfängtan,hatangefangen) 开始做某事", "unit": "E8"}, {"raw": "jemandenanetwasA erinnern 提醒某人想起某事", "unit": "E8"}, {"raw": "etwasA behalten(erbehält;behielt,hatbehalten) 保留", "unit": "E8"}, {"raw": "effizie．ntAdj. 高效的", "unit": "E8"}, {"raw": "vorallem 首先，特别是", "unit": "E8"}, {"raw": "dieAufmerksamkeiterhöhen 提高注意力", "unit": "E8"}, {"raw": "dieArbeitsmotivationsteigern 提升工作积极性", "unit": "E8"}, {"raw": "etwasA aufetwasA reduzieren 把……降低到……", "unit": "E8"}, {"raw": "dieFreiheitein/schränken 限制自由", "unit": "E8"}, {"raw": "dieDenkfähigkeitbeeinträchtigen 损害思维能力", "unit": "E8"}, {"raw": "denSchreibtischreinigen 清洁办公桌", "unit": "E8"}, {"raw": "dasZimmersaubermachen 打扫房间", "unit": "E8"}, {"raw": "dasZimmerum/stellen 重新放置房间物品位置", "unit": "E8"}, {"raw": "dasZimmerrenovieren 翻新房间", "unit": "E8"}, {"raw": "dasZimmerauf/räumen 收拾整理房间", "unit": "E8"}, {"raw": "etwasA weg/räumen 把某物清理走", "unit": "E8"}, {"raw": "denNachttischausdemZimmerräumen 把床头柜移出房间", "unit": "E8"}, {"raw": "(jemandem)etwasA weg/nehmen 拿走某人某物", "unit": "E8"}, {"raw": "etwasA vermeiden(ervermeidet,vermied,hatvermieden) 避免某物或某事", "unit": "E8"}, {"raw": "etwasA fest/stellen （经过调查研究）确认", "unit": "E8"}, {"raw": "etwasA aus/probieren 尝试", "unit": "E8"}, {"raw": "dieChanceverpassen 错过机会", "unit": "E8"}, {"raw": "jemandenberuhigen 安抚某人", "unit": "E8"}, {"raw": "dieLauneverbessern 改善情绪", "unit": "E8"}, {"raw": "fürjemanden/etwasA sorgen 照顾某人或某物", "unit": "E8"}, {"raw": "etwasA indieentsprechendenOrdnersortieren 把某物归类到相应的文件夹", "unit": "E8"}, {"raw": "einenpositivenEindruck(aufjemanden)machen （给某人）留下一个好印象", "unit": "E8"}, {"raw": "dasBuchbenutzen 使用这本书", "unit": "E8"}, {"raw": "Registerverwenden 使用索引", "unit": "E8"}, {"raw": "Ordnungschaffenundhalten 创造并保持秩序", "unit": "E8"}, {"raw": "etwasGrünes 一些绿植", "unit": "E8"}, {"raw": "etwasNliegtaufderHand 某事显而易见", "unit": "E8"}, {"raw": "etwasA teilen 分；分享", "unit": "E8"}, {"raw": "aufdiese(Artund)Weise 以这种方法", "unit": "E8"}, {"raw": "jemandenvonetwasD überzeugen 劝说某人相信某事", "unit": "E8"}, {"raw": "jemandenzuetwasD überreden 劝说某人去做某事", "unit": "E8"}, {"raw": "jemandenzuetwasD zwingen 强迫某人做某事", "unit": "E8"}, {"raw": "etwasN hängtmitetwasD zusammen 某事与某事相关联", "unit": "E8"}, {"raw": "imZentrumwohnen 住在市中心", "unit": "E8"}, {"raw": "mitjemandem/etwasD zurecht/kommen 和某人合得来；能胜任", "unit": "E8"}, {"raw": "kreuzundquer 横七竖八", "unit": "E8"}, {"raw": "abundzu 偶尔", "unit": "E8"}, {"raw": "überjemanden/etwasAbestimmen 有权支配某人或某物", "unit": "E8"}, {"raw": "mehrPlatzschaffen 腾出空间", "unit": "E8"}, {"raw": "etwasN führtzuetwasD 导致", "unit": "E8"}, {"raw": "etwasN sorgtfüretwasA 导致", "unit": "E8"}, {"raw": "inBezugaufetwasA 关于", "unit": "E8"}, {"raw": "allesweg/werfen 把所有东西都丢弃", "unit": "E8"}, {"raw": "anetwasDvorbei/gehen 路过", "unit": "E8"}, {"raw": "beietwasDvorbei/gehen 顺道拜访", "unit": "E8"}, {"raw": "etwasN istaußerBetrieb 某物不在运行中", "unit": "E8"}, {"raw": "etwasN istinBetrieb 某物在运行中", "unit": "E8"}, {"raw": "inderfünftenEtage 在 6楼", "unit": "E8"}, {"raw": "imfünftenStock 在 6楼", "unit": "E8"}, {"raw": "nachSüdengehen 朝南；往南走", "unit": "E8"}, {"raw": "diePflanzenpflegen 照料植物", "unit": "E8"}, {"raw": "aufdemSofasitzen 坐在长沙发上", "unit": "E8"}, {"raw": "indemSesselsitzen 坐在单人沙发上", "unit": "E8"}, {"raw": "etwasNpasstzuetwasD 某物与某物相配", "unit": "E8"}, {"raw": "etwasNpasstirgendwohin 某物放得进……", "unit": "E8"}, {"raw": "dieKlimaanlageein/schalten 打开空调", "unit": "E8"}, {"raw": "dieKlimaanlageaus/schalten 关闭空调", "unit": "E8"}, {"raw": "guteQualitätversprechen 质量保障", "unit": "E8"}, {"raw": "etwasN wirktirgendwieaufjemanden 某物对某人产生某种影响", "unit": "E8"}, {"raw": "etwasAbetrachten(=etwasAan/sehen) 打量", "unit": "E8"}, {"raw": "inderStadtwohnen 住在城里", "unit": "E8"}, {"raw": "aufdemLandwohnen 住在农村", "unit": "E8"}, {"raw": "vielunternehmen 有很多方式进行娱乐", "unit": "E8"}, {"raw": "insMuseumgehen 去博物馆", "unit": "E8"}, {"raw": "eineAusstellungbesuchen 去看展", "unit": "E8"}, {"raw": "einKulturangebotwahr/nehmen 感受体验文化活动", "unit": "E8"}, {"raw": "indieNaturgehen 去亲近大自然", "unit": "E8"}, {"raw": "imStaustecken 堵车", "unit": "E8"}, {"raw": "mitdemRadalleserreichen 骑车抵达所有地方", "unit": "E8"}, {"raw": "irgendwoauf/wachsen(erwächstauf) 长大", "unit": "E8"}, {"raw": "inderKindheit 在童年", "unit": "E8"}, {"raw": "derengeKontaktzurNatur 与自然的紧密联系", "unit": "E8"}, {"raw": "IchhabeeinProblem. 我有一个麻烦。", "unit": "E8"}, {"raw": "Dasdarfnichtwahrsein. 这不是真的！（我不接受）", "unit": "E8"}, {"raw": "WasmeinenSiedazu? 您对此怎么看？", "unit": "E8"}, {"raw": "WasmeinenSiedamit? 您这话什么意思？", "unit": "E8"}, {"raw": "Dasistsehrnettvondir. 你真好。", "unit": "E8"}, {"raw": "WohinkommtderTisch? 桌子放哪儿?", "unit": "E8"}];
+const QUESTIONS = [{"unit": "E1", "category": "词汇/短语", "type": "choice", "skill": "E1-动词短语", "q": "„Musik hören“ 的中文意思是：", "opts": ["听音乐", "写博客", "做练习", "问老师"], "a": 0, "e": "资料中的 E1 词汇列出“Musik hören = 听音乐”。"}, {"unit": "E2", "category": "词汇/动词变位", "type": "choice", "skill": "E2-不规则动词", "q": "„er ___“（fahren）的正确形式是：", "opts": ["fahrt", "fährt", "fuhr", "fahren"], "a": 1, "e": "E2 词汇表给出的形式是“Rad fahren (er fährt)”。这里考查第三人称单数现在时。"}, {"unit": "E3", "category": "格/固定结构", "type": "choice", "skill": "E3-es gibt Akkusativ", "q": "„Es gibt ___ Problem.“ 应填：", "opts": ["ein", "einen", "einem", "einer"], "a": 0, "e": "E3 资料明确列出“es gibt + Akk.”；Problem 是中性名词（das Problem），中性单数第四格与第一格同形，因此是 ein Problem。"}, {"unit": "E3", "category": "词汇/短语", "type": "choice", "skill": "E3-固定表达", "q": "„Hunger haben“ 的意思是：", "opts": ["有时间", "饿了", "有约", "说得对"], "a": 1, "e": "E3 词汇中给出“Hunger haben (= hungrig sein) = 饿了”。"}, {"unit": "E4", "category": "词汇/量词", "type": "choice", "skill": "E4-量词", "q": "„eine Flasche Wasser“ 是：", "opts": ["一瓶水", "一袋水", "一盒水", "一听水"], "a": 0, "e": "E4 词汇表列出“eine Flasche Wasser = 一瓶水”。"}, {"unit": "E5", "category": "词汇/可分动词", "type": "choice", "skill": "E5-可分动词", "q": "„früh auf/stehen“ 的意思是：", "opts": ["早起", "早睡", "打电话", "做家务"], "a": 0, "e": "E5 词汇中列出“früh auf/stehen = 早起”。可分前缀 auf- 在现在时中与 stehen 分开。"}, {"unit": "E3", "category": "格", "type": "fill", "skill": "E3-Dativ", "q": "Ich helfe ___ Freund.（der）", "a": "dem", "e": "E3 资料列出“jdm. (bei etw. D) helfen”，helfen 支配第三格。der Freund → dem Freund。"}, {"unit": "E4", "category": "词汇", "type": "tf", "skill": "E4-购物词汇", "q": "„Schlange stehen“ 表示“排队”。", "a": true, "e": "正确。E4 词汇表明确列出“Schlange stehen = 排队”。"}, {"unit": "E6", "category": "Dativ", "type": "choice", "skill": "E6-Dativ动词", "q": "Die Musik gefällt ___.", "opts": ["ich", "mich", "mir", "mein"], "a": 2, "e": "E6 的“Verben mit Dativ”明确列出“etwas gefällt jemandem”。因此人称代词使用第三格：mir。"}, {"unit": "E6", "category": "Dativ", "type": "choice", "skill": "E6-Dativ动词", "q": "Ich danke ___.", "opts": ["du", "dich", "dir", "dein"], "a": 2, "e": "E6 资料列出“jemandem für etwas danken”。danken 支配第三格：dir。"}, {"unit": "E6", "category": "介词", "type": "choice", "skill": "E6-Präpositionen", "q": "Ich habe Angst ___ etwas.", "opts": ["für", "vor", "auf", "mit"], "a": 1, "e": "E6 介词部分明确给出“Angst vor etwas D haben”。因此使用 vor + Dativ。"}, {"unit": "E6", "category": "介词", "type": "choice", "skill": "E6-Präpositionen", "q": "Ich bin stolz ___ meine Freundin.", "opts": ["auf", "vor", "mit", "bei"], "a": 0, "e": "E6 资料列出“auf etwas A / jemanden stolz sein”。因此这里是 stolz auf + Akkusativ。"}, {"unit": "E6", "category": "连接词", "type": "choice", "skill": "E6-Konnektoren", "q": "Er spielt nicht Fußball, ___ er schwimmt.", "opts": ["sondern", "aber", "zwar", "und"], "a": 0, "e": "E6 资料给出“nicht/kein ..., sondern ...”，用于前后否定与纠正/对照。"}, {"unit": "E6", "category": "连接词", "type": "choice", "skill": "E6-Konnektoren", "q": "Sie ist zwar müde, ___ sie arbeitet weiter.", "opts": ["sondern", "aber", "und", "oder"], "a": 1, "e": "E6 资料给出“zwar ..., aber ...”。这里前半句先承认“累”，后半句用 aber 引出转折。"}, {"unit": "E6", "category": "Dativ", "type": "fill", "skill": "E6-Dativ动词", "q": "Das Essen schmeckt ___.（ich）", "a": "mir", "e": "E6 明确列出“etwas schmeckt jemandem”。因此 ich 的第三格是 mir。"}, {"unit": "E6", "category": "Dativ", "type": "fill", "skill": "E6-Dativ动词", "q": "Das Buch gehört ___.（du）", "a": "dir", "e": "E6 明确列出“etwas gehört jemandem”。du 的第三格是 dir。"}, {"unit": "E6", "category": "介词", "type": "fill", "skill": "E6-Präpositionen", "q": "Wir fahren ___ U-Bahn.", "a": "mit der", "e": "E6 词汇/介词部分给出“mit der U-Bahn fahren”。这是固定搭配。"}, {"unit": "E6", "category": "连接词", "type": "tf", "skill": "E6-Konnektoren", "q": "„nicht nur ..., sondern auch ...“ 表示“ 不仅……而且……”。", "a": true, "e": "正确。该结构直接出现在 E6 资料中。"}, {"unit": "E7", "category": "Perfekt", "type": "choice", "skill": "E7-Perfekt助动词", "q": "Ich ___ gestern nach Berlin gefahren.", "opts": ["habe", "bin", "war", "hatte"], "a": 1, "e": "Perfekt 工作表把 fahren(Vi.)列入使用 sein 的动词。这里表示位置变化，因此是: Ich bin nach Berlin gefahren。"}, {"unit": "E7", "category": "Perfekt", "type": "choice", "skill": "E7-Perfekt助动词", "q": "Wir ___ gestern lange geschlafen.", "opts": ["sind", "haben", "waren", "hatten"], "a": 1, "e": "工作表中的规则说明了 Perfekt 的助动词选择；schlafen 在这里使用 haben：Wir haben geschlafen。"}, {"unit": "E7", "category": "Perfekt", "type": "choice", "skill": "E7-PartizipII规则", "q": "lernen 的 Partizip II 是：", "opts": ["gelernen", "gelernt", "gelerntet", "lernen"], "a": 1, "e": "Perfekt 工作表说明规则动词常见形式为 ge + Verbstamm + (e)t，因此 lernen → gelernt。"}, {"unit": "E7", "category": "Perfekt", "type": "choice", "skill": "E7-PartizipII-ieren", "q": "studieren 的 Partizip II 是：", "opts": ["gestudiert", "studiert", "studieren", "studierte"], "a": 1, "e": "工作表明确区分以 -ieren 结尾的动词：Partizip II 使用词干 + t，不加 ge-。因此 studieren → studiert。"}, {"unit": "E7", "category": "Perfekt", "type": "choice", "skill": "E7-PartizipII-不可分前缀", "q": "besuchen 的 Partizip II 是：", "opts": ["gebesucht", "besucht", "besuchen", "besuchte"], "a": 1, "e": "工作表列出不可分前缀 be-。不可分前缀动词的 Partizip II 不加 ge-：besuchen → besucht。"}, {"unit": "E7", "category": "Perfekt", "type": "choice", "skill": "E7-PartizipII-可分动词", "q": "einladen 的 Partizip II 是：", "opts": ["eingeladen", "geeinladen", "einladet", "einluden"], "a": 0, "e": "工作表说明可分动词的 Partizip II 形式为 Präfix + ge + Verbstamm + t/en 等；einladen → eingeladen。"}, {"unit": "E7", "category": "Perfekt", "type": "choice", "skill": "E7-PartizipII-强变化", "q": "lesen 的 Partizip II 是：", "opts": ["gelesen", "gelest", "gelesert", "lesen"], "a": 0, "e": "Perfekt 工作表 II 的强变化动词表列出 lesen → hat gelesen。"}, {"unit": "E7", "category": "Präteritum", "type": "choice", "skill": "E7-sein过去时", "q": "sein 的 ich-Präteritum 是：", "opts": ["bin", "war", "hatte", "wurde"], "a": 1, "e": "工作表中的语法框架区分过去时 Präteritum 与 Perfekt；sein 的常用过去式为 ich war。"}, {"unit": "E7", "category": "Präteritum", "type": "choice", "skill": "E7-haben过去时", "q": "haben 的 ich-Präteritum 是：", "opts": ["habe", "hatte", "war", "wurde"], "a": 1, "e": "haben 的第一人称单数 Präteritum 是 hatte。"}, {"unit": "E7", "category": "Perfekt", "type": "tf", "skill": "E7-Perfekt助动词", "q": "„Ich bin viel Deutsch gelernt.“ 是正确的 Perfekt 句子。", "a": false, "e": "错误。lernen 在这里用 haben：Ich habe viel Deutsch gelernt。"}, {"unit": "E7", "category": "Perfekt", "type": "tf", "skill": "E7-PartizipII-ieren", "q": "fotografieren 的 Partizip II 是 fotografiert。", "a": true, "e": "正确。工作表把 -ieren 结尾动词单列，并说明 Partizip II 不加 ge-；fotografieren → fotografiert。"}, {"unit": "E7", "category": "Perfekt", "type": "tf", "skill": "E7-PartizipII可分动词", "q": "aufstehen 的 Partizip II 是 geaufsteht。", "a": false, "e": "错误。可分动词中 ge 插入前缀与词干之间：aufstehen → aufgestanden。"}, {"unit": "E7", "category": "Perfekt", "type": "fill", "skill": "E7-Perfekt助动词", "q": "Wir ___ gestern ins Kino gegangen.", "a": "sind", "e": "gehen 在工作表的“Verben der Bewegung”中使用 sein：Wir sind gegangen。"}, {"unit": "E7", "category": "Perfekt", "type": "fill", "skill": "E7-PartizipII规则", "q": "Ich habe gestern viel ___.（machen）", "a": "gemacht", "e": "machen → gemacht，属于规则动词的常见 Partizip-II 形式。"}, {"unit": "E7", "category": "Perfekt", "type": "fill", "skill": "E7-PartizipII不可分前缀", "q": "Ich habe meine Freunde ___.（besuchen）", "a": "besucht", "e": "besuchen 含不可分前缀 be-，Partizip II 不加 ge-：besucht。"}, {"unit": "E7", "category": "Perfekt", "type": "fill", "skill": "E7-PartizipII可分动词", "q": "Wir haben viele Gäste ___.（einladen）", "a": "eingeladen", "e": "einladen 是可分动词，Partizip II 为 eingeladen。"}, {"unit": "E7", "category": "Perfekt", "type": "fill", "skill": "E7-强变化", "q": "Sie hat das Buch ___.（lesen）", "a": "gelesen", "e": "lesen → gelesen，属于工作表 II 中的强变化动词。"}, {"unit": "E8", "category": "介词/位置", "type": "choice", "skill": "E8-Wohin-Wo", "q": "Ich stelle das Buch ___ Tisch.", "opts": ["auf den", "auf dem", "in der", "an der"], "a": 0, "e": "E8 词汇与训练中涉及位置关系；这里是“把书放到桌上”，有方向/位置变化，auf 后接第四格：auf den Tisch。"}, {"unit": "E8", "category": "介词/位置", "type": "choice", "skill": "E8-Wohin-Wo", "q": "Das Buch liegt ___ Tisch.", "opts": ["auf den", "auf dem", "in den", "an die"], "a": 1, "e": "这里表示静态位置“在桌上”，auf 后用第三格：auf dem Tisch。"}, {"unit": "E8", "category": "介词/地点", "type": "choice", "skill": "E8-in+格", "q": "Wir gehen ___ Küche.", "opts": ["in die", "in der", "auf dem", "zu der"], "a": 0, "e": "gehen 表示进入某处，有方向，in + Akkusativ：in die Küche。"}, {"unit": "E8", "category": "介词/地点", "type": "choice", "skill": "E8-in+格", "q": "Wir kochen ___ Küche.", "opts": ["in die", "in der", "in den", "auf die"], "a": 1, "e": "kochen 在这里表示在厨房内进行活动，属于静态位置：in der Küche。"}, {"unit": "E8", "category": "固定搭配", "type": "choice", "skill": "E8-地点表达", "q": "Wir reisen ___ Deutschland.", "opts": ["nach", "in die", "in der", "zu"], "a": 0, "e": "E8 训练材料中区分国家名称的方向/地点表达；国家名 Deutschland 在“去德国”时用 nach Deutschland。"}, {"unit": "E8", "category": "固定搭配", "type": "choice", "skill": "E8-地点表达", "q": "Ich gehe ___ Hause.", "opts": ["nach", "zu", "in", "an"], "a": 0, "e": "固定表达：nach Hause = 回家/到家。"}, {"unit": "E8", "category": "固定搭配", "type": "choice", "skill": "E8-地点表达", "q": "Ich bin ___ Hause.", "opts": ["nach", "zu", "in", "an"], "a": 1, "e": "固定表达：zu Hause = 在家。"}, {"unit": "E8", "category": "介词", "type": "choice", "skill": "E8-固定介词", "q": "Pflanzen sorgen ___ gute Luft.", "opts": ["für", "vor", "von", "zu"], "a": 0, "e": "E8 词汇明确给出“Pflanzen sorgen für gute Luft.”，固定搭配 sorgen für + Akkusativ。"}, {"unit": "E8", "category": "介词", "type": "choice", "skill": "E8-固定介词", "q": "Er überzeugt mich ___ seiner Idee.", "opts": ["von", "für", "zu", "mit"], "a": 0, "e": "E8 词汇明确给出“jemanden von etwas D überzeugen”。"}, {"unit": "E8", "category": "介词", "type": "choice", "skill": "E8-固定介词", "q": "Er überredet mich ___ einem Umzug.", "opts": ["von", "zu", "für", "mit"], "a": 1, "e": "E8 词汇明确给出“jemanden zu etwas D überreden”。"}, {"unit": "E8", "category": "介词", "type": "choice", "skill": "E8-固定介词", "q": "Das führt ___ Problemen.", "opts": ["für", "zu", "von", "auf"], "a": 1, "e": "E8 词汇明确给出“etwas führt zu etwas D”。"}, {"unit": "E8", "category": "词汇/固定表达", "type": "choice", "skill": "E8-固定表达", "q": "„im Zentrum wohnen“ 的意思是：", "opts": ["住在市中心", "住在农村", "住在楼顶", "住在郊外"], "a": 0, "e": "E8 词汇表 Teil B 中直接列出“im Zentrum wohnen = 住在市中心”。"}, {"unit": "E8", "category": "词汇/固定表达", "type": "choice", "skill": "E8-固定表达", "q": "„auf dem Land wohnen“ 的意思是：", "opts": ["住在城市", "住在农村", "住在车站", "住在市中心"], "a": 1, "e": "E8 词汇表 Teil D 中列出“auf dem Land wohnen = 住在农村”。"}, {"unit": "E8", "category": "词汇", "type": "tf", "skill": "E8-词汇", "q": "„etwas in Ordnung bringen“ 可以表示“整理，使……有序”。", "a": true, "e": "正确。E8 词汇表 Teil A 直接给出这一含义。"}, {"unit": "E8", "category": "词汇", "type": "tf", "skill": "E8-词汇", "q": "„die Klimaanlage ausschalten“ 表示“打开空调”。", "a": false, "e": "错误。einschalten = 打开；ausschalten = 关闭。E8 词汇表同时列出了两个表达。"}, {"unit": "E8", "category": "词汇", "type": "fill", "skill": "E8-固定表达", "q": "Ich gehe ___ Hause.", "a": "nach", "e": "固定表达 nach Hause。"}, {"unit": "E8", "category": "词汇", "type": "fill", "skill": "E8-固定介词", "q": "Pflanzen sorgen ___ gute Luft.", "a": "für", "e": "固定搭配 sorgen für + Akkusativ。"}, {"unit": "E8", "category": "固定介词", "type": "fill", "skill": "E8-固定介词", "q": "Das führt ___ Problemen.", "a": "zu", "e": "固定搭配 führen zu + Dativ。"}];
+const GRAMMAR = [{"unit": "E1–E5", "title": "词汇与基础句型", "body": "当前上传材料提供 E1–E5 词汇/短语。网站把这些内容作为词汇检索、闪卡和基础题库来源。"}, {"unit": "E6", "title": "第三格动词与介词", "body": "上传的 E6 材料包含 Verben mit Dativ、固定介词以及 nicht/sondern、nicht nur/sondern auch、zwar/aber 等连接结构。"}, {"unit": "E7", "title": "Perfekt 与 Partizip II", "body": "上传的两份 Perfekt 工作表包含：Perfekt 的基本构成、sein/haben 的选择、规则/不规则 Partizip II、-ieren 动词、不可分/可分前缀以及大量练习。"}, {"unit": "E8", "title": "居住、空间与固定介词", "body": "上传的 E8 词汇覆盖整理、房间、空间位置、固定搭配、sorgen für、führen zu、überzeugen von、überreden zu、nach Hause/zu Hause 等。"}, {"unit": "E9–E10", "title": "待补充模块", "body": "目前你提供的文件中没有 E9、E10 的对应词汇/课文/语法/听力材料。网站先保留模块和材料导入入口；上传后即可继续扩充，避免凭空添加超出资料范围的内容。"}];
+const SOURCES = [{"name": "B1E1-E5 Vokabeln.pdf", "scope": "E1–E5 词汇与短语", "kind": "词汇"}, {"name": "B1E6 Vokabeln.pdf", "scope": "E6 词汇、Dativ、介词、连接结构", "kind": "词汇+语法"}, {"name": "B1E7 Vokabeln.docx", "scope": "E7 词汇、短语、Partizip II", "kind": "词汇"}, {"name": "B1E8 Vokabeln.pdf", "scope": "E8 词汇与固定搭配", "kind": "词汇"}, {"name": "Perfekt Arbeitsblatt (1).pdf", "scope": "E7 Perfekt、Partizip II、sein/haben", "kind": "语法练习"}, {"name": "Perfekt Arbeitsblatt II (1).pdf", "scope": "E7 强变化/混合变化 Partizip II 与 Perfekt 句子", "kind": "语法练习"}];
+
+const KEY = "DeutschTrainingLab_E1E10_v4";
+
+const DEFAULT_STATE = {
+ total:0, correct:0, wrong:0,
+ skills:{}, mistakes:[], schedule:{}, customMaterials:[],
+ flashKnown:0
+};
+
+let state = loadState();
+let session = {queue:[], pos:0, correct:0, mode:"smart", current:null, answered:false};
+let flashIndex = 0, flashFront = true;
+
+function loadState(){
+ try{
+  const x = JSON.parse(localStorage.getItem(KEY));
+  return Object.assign({}, DEFAULT_STATE, x || {});
+ }catch(e){ return structuredClone(DEFAULT_STATE); }
+}
+function saveState(){ localStorage.setItem(KEY, JSON.stringify(state)); renderAll(); }
+
+function go(id){
+ document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+ const p=document.getElementById(id); if(p) p.classList.add("active");
+ document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.page===id));
+ if(id==="review") renderReview();
+ if(id==="mistakes") renderMistakes();
+ if(id==="words") renderWords();
+ if(id==="data") renderDataOverview();
+ if(id==="library"){renderSourceCatalog();renderCustomMaterials();}
+}
+
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>go(b.dataset.page));
+
+function unitOf(q){return q.unit || "自定义";}
+function allSkills(){
+ const s=new Set(QUESTIONS.map(q=>q.skill));
+ Object.keys(state.skills||{}).forEach(x=>s.add(x));
+ return [...s].sort();
+}
+function dueCount(){
+ const now=Date.now();
+ return Object.values(state.schedule||{}).filter(x=>x.next && x.next<=now).length;
+}
+
+function renderStats(){
+ document.getElementById("total").textContent=state.total;
+ document.getElementById("rate").textContent=state.total?Math.round(state.correct/state.total*100)+"%":"—";
+ document.getElementById("wrongTotal").textContent=state.wrong;
+ document.getElementById("dueTotal").textContent=dueCount();
+ const covered=[...new Set(VOCAB.map(x=>x.unit))].join("、");
+ document.getElementById("coverageText").textContent="已解析词汇材料："+covered+"；已建立 E1–E10 训练框架，其中 E9–E10 等待你补充对应材料。";
+}
+function renderUnitGrid(){
+ const root=document.getElementById("unitGrid");
+ root.innerHTML="";
+ for(let i=1;i<=10;i++){
+  const u="E"+i, n=QUESTIONS.filter(q=>q.unit===u).length, w=VOCAB.filter(v=>v.unit===u).length;
+  const b=document.createElement("button"); b.className="unitbtn";
+  b.innerHTML="<b>"+u+"</b><span class='muted small'>"+n+" 道题 · "+w+" 条解析词汇</span>";
+  b.onclick=()=>openUnit(u); root.appendChild(b);
+ }
+ const root2=document.getElementById("learnUnits"); root2.innerHTML="";
+ for(let i=1;i<=10;i++){
+  const u="E"+i, b=document.createElement("button"); b.className="unitbtn";
+  b.innerHTML="<b>"+u+"</b><span class='muted small'>学习 / 练习 / 材料</span>";
+  b.onclick=()=>openUnit(u); root2.appendChild(b);
+ }
+}
+function openUnit(unit){
+ go("learn");
+ const qs=QUESTIONS.filter(q=>q.unit===unit);
+ const vs=VOCAB.filter(v=>v.unit===unit);
+ const grammar=GRAMMAR.filter(g=>g.unit===unit);
+ let h="<div class='card'><h2>"+unit+"</h2>";
+ h+="<div class='kpi'><span>题目 "+qs.length+"</span><span>词汇 "+vs.length+"</span></div>";
+ if(grammar.length) h+="<h3>学习提示</h3>"+grammar.map(g=>"<div class='notice'><b>"+g.title+"</b><br>"+g.body+"</div>").join("");
+ h+="<h3>本单元可练习的知识点</h3>";
+ const skills=[...new Set(qs.map(q=>q.skill))];
+ h+=skills.length?skills.map(s=>"<button class='secondary' style='margin:3px' onclick='startSkill("+JSON.stringify(s)+")'>"+s+"</button>").join(" "):"<p class='muted'>目前没有根据已上传资料建立题目。</p>";
+ h+="<hr><h3>词汇</h3>";
+ h+=vs.slice(0,80).map(v=>"<div class='material'><span class='pill'>"+v.unit+"</span> "+escapeHtml(v.raw)+"</div>").join("");
+ if(vs.length>80) h+="<p class='muted small'>此处显示前80条；完整内容可在“词汇库”搜索。</p>";
+ h+="</div>";
+ document.getElementById("learnContent").innerHTML=h;
+}
+
+function escapeHtml(s){
+ return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
+
+function weightedQueue(count=10, filterFn=null){
+ let pool=QUESTIONS.map((q,i)=>({q,i})).filter(x=>!filterFn || filterFn(x.q));
+ if(!pool.length) return [];
+ const expanded=[];
+ pool.forEach(({q,i})=>{
+  const st=state.skills[q.skill]||{wrong:0,right:0,streak:0};
+  let w=1+(st.wrong||0)*2+(st.streak<1?1:0);
+  for(let k=0;k<Math.min(w,8);k++) expanded.push(i);
+ });
+ const arr=[];
+ while(expanded.length && arr.length<Math.max(count,expanded.length)){
+  const j=Math.floor(Math.random()*expanded.length);
+  const id=expanded.splice(j,1)[0];
+  if(!arr.includes(id)) arr.push(id);
+ }
+ if(arr.length<count){
+  const rest=pool.map(x=>x.i).sort(()=>Math.random()-.5);
+  for(const id of rest) if(!arr.includes(id) && arr.length<count) arr.push(id);
+ }
+ return arr.slice(0,count);
+}
+
+function startSmartQuiz(){
+ session={queue:weightedQueue(10),pos:0,correct:0,mode:"smart",current:null,answered:false};
+ go("quiz"); showQuestion();
+}
+function startReview(){
+ const dueSkills=Object.entries(state.schedule||{})
+  .filter(([s,x])=>x.next && x.next<=Date.now())
+  .map(([s])=>s);
+ const ids=weightedQueue(10,q=>dueSkills.includes(q.skill));
+ if(!ids.length){go("review");renderReview();return;}
+ session={queue:ids,pos:0,correct:0,mode:"review",current:null,answered:false};
+ go("quiz"); showQuestion();
+}
+function startSkill(skill){
+ const ids=weightedQueue(10,q=>q.skill===skill);
+ session={queue:ids,pos:0,correct:0,mode:"skill",current:null,answered:false};
+ go("quiz"); showQuestion();
+}
+function startUnit(unit){
+ const ids=weightedQueue(10,q=>q.unit===unit);
+ session={queue:ids,pos:0,correct:0,mode:"unit",current:null,answered:false};
+ go("quiz"); showQuestion();
+}
+
+function showQuestion(){
+ if(!session.queue.length){
+  document.getElementById("qtext").textContent="目前没有这类题目";
+  document.getElementById("options").innerHTML="";
+  document.getElementById("fillbox").innerHTML="";
+  document.getElementById("feedback").innerHTML="<div class='answer'>请先补充该单元材料，或选择已有知识点。</div>";
+  return;
+ }
+ if(session.pos>=session.queue.length){
+  document.getElementById("qtext").textContent="本轮完成 🎉";
+  document.getElementById("options").innerHTML="";
+  document.getElementById("fillbox").innerHTML="";
+  document.getElementById("feedback").innerHTML="<div class='answer ok'><b>本轮 "+session.correct+" / "+session.queue.length+"</b><br>系统已更新你的知识点权重和复习计划。</div>";
+  document.getElementById("progress").textContent="完成";
+  document.getElementById("sessioninfo").textContent="本轮结束";
+  document.getElementById("bar").style.width="100%";
+  return;
+ }
+ const q=QUESTIONS[session.queue[session.pos]];
+ session.current=q; session.answered=false;
+ document.getElementById("qtype").textContent=q.category+" · "+q.type;
+ document.getElementById("progress").textContent=(session.pos+1)+" / "+session.queue.length;
+ document.getElementById("qtext").textContent=q.q;
+ document.getElementById("feedback").innerHTML="";
+ document.getElementById("fillbox").innerHTML="";
+ const nb=document.getElementById("nextBtn");if(nb)nb.disabled=true;
+ document.getElementById("bar").style.width=(session.pos/session.queue.length*100)+"%";
+ document.getElementById("sessioninfo").textContent="本轮 "+session.pos+" / "+session.queue.length;
+
+ const opts=document.getElementById("options");
+ opts.innerHTML="";
+ if(q.type==="choice" || q.type==="tf"){
+  const list=q.type==="tf"?["正确","错误"]:q.opts;
+  list.forEach((o,i)=>{
+   const b=document.createElement("button"); b.className="option"; b.textContent=o;
+   b.onclick=()=>answerChoice(i); opts.appendChild(b);
+  });
+ }else{
+  const row=document.createElement("div"); row.className="fillrow";
+  const inp=document.createElement("input"); inp.id="answerInput"; inp.autocomplete="off"; inp.placeholder="输入答案";
+  const btn=document.createElement("button"); btn.className="primary"; btn.textContent="提交"; btn.onclick=submitFill;
+  row.append(inp,btn); opts.appendChild(row);
+  inp.onkeydown=e=>{if(e.key==="Enter")submitFill()};
+ }
+}
+
+function normalizeAnswer(s){
+ return String(s).trim().toLowerCase().replace(/[“”"‘’']/g,"").replace(/\s+/g," ");
+}
+function answerChoice(i){
+ if(session.answered)return;
+ const q=session.current;
+ const val=q.type==="tf"?(i===0):i;
+ finishQuestion(q,val===q.a,i);
+}
+function submitFill(){
+ if(session.answered)return;
+ const q=session.current;
+ const inp=document.getElementById("answerInput");
+ if(!inp)return;
+ const user=normalizeAnswer(inp.value);
+ const correct=normalizeAnswer(q.a);
+ finishQuestion(q,user===correct,null,user);
+}
+function finishQuestion(q,ok,selectedIndex=null,userAnswer=""){
+ session.answered=true;
+ state.total++; state.correct+=ok?1:0; state.wrong+=ok?0:1;
+ if(!state.skills[q.skill]) state.skills[q.skill]={right:0,wrong:0,streak:0};
+ const st=state.skills[q.skill];
+ if(ok){st.right++;st.streak=(st.streak||0)+1;}else{st.wrong++;st.streak=0;}
+ updateSchedule(q.skill,ok);
+ if(!ok){
+  state.mistakes.unshift({
+   time:new Date().toISOString(),unit:q.unit,skill:q.skill,q:q.q,
+   correct: q.type==="choice"?q.opts[q.a]:(q.type==="tf"?(q.a?"正确":"错误"):String(q.a)),
+   user:userAnswer || (selectedIndex!==null?(q.type==="tf"?(selectedIndex===0?"正确":"错误"):q.opts[selectedIndex]):""),
+   explanation:q.e
+  });
+  state.mistakes=state.mistakes.slice(0,200);
+ }
+ saveState();
+
+ document.querySelectorAll("#options .option").forEach((b,i)=>{
+  const isCorrect=q.type==="tf"?i===0:(q.type==="choice"?i===q.a:false);
+  if(isCorrect)b.classList.add("correct");
+  if(selectedIndex!==null && i===selectedIndex && !ok)b.classList.add("wrong");
+ });
+
+ let correctText=q.type==="choice"?q.opts[q.a]:(q.type==="tf"?(q.a?"正确":"错误"):q.a);
+ const box=document.createElement("div");
+ box.className="answer "+(ok?"ok":"bad");
+ box.innerHTML="<b>"+(ok?"✓ 正确":"✗ 错误")+"</b><br>"+(!ok?("<b>正确答案：</b>"+escapeHtml(correctText)+"<br>"):"")+escapeHtml(q.e);
+ document.getElementById("feedback").appendChild(box);
+ session.correct+=ok?1:0;
+ document.getElementById("sessioninfo").textContent="本轮 "+(session.pos+1)+" / "+session.queue.length+" · 本轮正确 "+session.correct;
+ document.getElementById("nextBtn").disabled=false;
+ document.getElementById("nextBtn").focus();
+}
+
+function nextQuestion(){
+ if(!session.current || !session.answered){
+  return;
+ }
+ session.pos++;
+ showQuestion();
+}
+function updateSchedule(skill,ok){
+ const old=state.schedule[skill]||{box:0,next:0};
+ if(ok){
+  old.box=Math.min((old.box||0)+1,5);
+ }else{
+  old.box=0;
+ }
+ const intervals=[0,10*60*1000,24*3600*1000,3*24*3600*1000,7*24*3600*1000,14*24*3600*1000];
+ old.next=Date.now()+(ok?intervals[old.box]:10*60*1000);
+ state.schedule[skill]=old;
+}
+
+function renderReview(){
+ const root=document.getElementById("reviewList");
+ const due=Object.entries(state.schedule||{}).filter(([s,x])=>x.next && x.next<=Date.now()).sort((a,b)=>a[1].next-b[1].next);
+ if(!due.length){root.innerHTML="<div class='notice'>今天暂时没有到期的知识点。你也可以直接开始智能练习。</div>";return;}
+ root.innerHTML=due.map(([s,x])=>{
+  const st=state.skills[s]||{};
+  return "<div class='skillrow'><b>"+escapeHtml(s)+"</b><br><span class='muted small'>错误 "+(st.wrong||0)+" · 正确 "+(st.right||0)+" · 已到期复习</span></div>";
+ }).join("");
+}
+
+function renderMistakes(){
+ const uf=document.getElementById("mistakeUnitFilter"), sf=document.getElementById("mistakeSkillFilter");
+ const units=[...new Set(state.mistakes.map(x=>x.unit).filter(Boolean))].sort();
+ const skills=[...new Set(state.mistakes.map(x=>x.skill).filter(Boolean))].sort();
+ const oldU=uf.value, oldS=sf.value;
+ uf.innerHTML="<option value=''>全部单元</option>"+units.map(x=>"<option>"+escapeHtml(x)+"</option>").join("");
+ sf.innerHTML="<option value=''>全部知识点</option>"+skills.map(x=>"<option>"+escapeHtml(x)+"</option>").join("");
+ uf.value=oldU;sf.value=oldS;
+ const list=state.mistakes.filter(x=>(!uf.value||x.unit===uf.value)&&(!sf.value||x.skill===sf.value));
+ const root=document.getElementById("mistakeList");
+ root.innerHTML=list.length?list.map((x,i)=>"<div class='material'><div><span class='pill'>"+escapeHtml(x.unit||"")+"</span><span class='pill'>"+escapeHtml(x.skill||"")+"</span></div><p><b>"+escapeHtml(x.q)+"</b></p><p class='small'>你的答案：<span class='danger'>"+escapeHtml(x.user||"未记录")+"</span><br>正确答案："+escapeHtml(x.correct||"")+"</p><div class='answer'>"+escapeHtml(x.explanation||"")+"</div><p class='muted small'>"+new Date(x.time).toLocaleString()+"</p></div>").join("")
+ :"<p class='muted'>还没有符合筛选条件的错题。</p>";
+}
+
+function renderWords(){
+ const el=document.getElementById("wordSearch");
+ const list=document.getElementById("wordList");
+ if(!el||!list)return;
+ const q=normalizeAnswer(el.value||"");
+ const arr=VOCAB.filter(v=>normalizeAnswer(v.raw+" "+v.unit).includes(q));
+ list.innerHTML=arr.slice(0,500).map(v=>"<div class='word'><b>"+escapeHtml(v.unit)+"</b><div class='raw'>"+escapeHtml(v.raw)+"</div></div>").join("") || "<p class='muted'>没有找到匹配内容。</p>";
+}
+document.addEventListener("input",e=>{if(e.target&&e.target.id==="wordSearch")renderWords();});
+
+function nextFlash(){
+ if(!VOCAB.length)return;
+ flashIndex=Math.floor(Math.random()*VOCAB.length); flashFront=true; renderFlash();
+}
+function flipFlash(){flashFront=!flashFront;renderFlash();}
+function renderFlash(){
+ const x=VOCAB[flashIndex];
+ if(!x){document.getElementById("flash").innerHTML="<span>暂无闪卡</span>";return;}
+ document.getElementById("flash").innerHTML=flashFront
+ ? "<div><div class='de'>"+escapeHtml(x.raw)+"</div><div class='muted small'>点击查看资料原文</div></div>"
+ : "<div><div class='zh'>"+escapeHtml(x.raw)+"</div><div class='muted small'>来源："+escapeHtml(x.unit)+"</div></div>";
+}
+function markFlashKnown(){state.flashKnown++;saveState();nextFlash();}
+
+function renderGrammar(){
+ document.getElementById("grammarCards").innerHTML=GRAMMAR.map(g=>"<div class='material'><div><span class='pill'>"+escapeHtml(g.unit)+"</span><b>"+escapeHtml(g.title)+"</b></div><p>"+escapeHtml(g.body)+"</p></div>").join("");
+}
+function renderSourceCatalog(){
+ document.getElementById("sourceCatalog").innerHTML=SOURCES.map(s=>"<div class='material'><b>"+escapeHtml(s.name)+"</b><br><span class='muted'>"+escapeHtml(s.kind)+" · "+escapeHtml(s.scope)+"</span></div>").join("");
+}
+function renderCustomMaterials(){
+ const arr=state.customMaterials||[];
+ document.getElementById("customMaterials").innerHTML=arr.length
+ ? "<h4>我自己添加的内容</h4>"+arr.map((x,i)=>"<div class='material'><span class='pill'>"+escapeHtml(x.unit)+"</span><span class='pill'>"+escapeHtml(x.type)+"</span><b>"+escapeHtml(x.title)+"</b><p>"+escapeHtml(x.content).replace(/\n/g,"<br>")+"</p><button class='dangerbtn' onclick='deleteCustom("+i+")'>删除</button></div>").join("")
+ : "<p class='muted small'>还没有自定义条目。</p>";
+}
+function addCustomMaterial(){
+ const title=document.getElementById("newTitle").value.trim();
+ const content=document.getElementById("newContent").value.trim();
+ if(!title||!content){alert("请至少填写标题和内容。");return;}
+ state.customMaterials.push({
+  unit:document.getElementById("newUnit").value,
+  type:document.getElementById("newType").value,
+  title,content,time:new Date().toISOString()
+ });
+ document.getElementById("newTitle").value="";
+ document.getElementById("newContent").value="";
+ saveState();renderCustomMaterials();
+}
+function deleteCustom(i){
+ if(!confirm("确定删除这条自定义知识吗？"))return;
+ state.customMaterials.splice(i,1);saveState();renderCustomMaterials();
+}
+
+
+async function parseKnowledgeFile(){
+ const input=document.getElementById("knowledgeFile"),result=document.getElementById("uploadResult");
+ const file=input?.files?.[0];if(!file){alert("请先选择文件。");return}
+ const unit=document.getElementById("uploadUnit").value,type=document.getElementById("uploadType").value;
+ try{
+  let content="";
+  const ext=file.name.toLowerCase().split(".").pop();
+  if(["txt","md","csv","json"].includes(ext)){
+    content=await file.text();
+  }else{
+    content="【文件已上传】"+file.name+"\n\n该文件为 "+ext.toUpperCase()+" 格式。当前离线版已保存文件信息，但没有在本地伪造 PDF/DOCX 的解析结果。若要把 PDF/DOCX 正文真正导入题库，请将其转换为 TXT/MD 后上传，或继续使用已提供的原始材料导入流程。";
+  }
+  const title=file.name+" · "+type;
+  state.customMaterials=state.customMaterials||[];
+  state.customMaterials.push({unit,type,title,content,time:new Date().toISOString(),source:"uploaded"});
+  saveState();renderCustomMaterials();
+  result.style.display="block";
+  result.innerHTML="<b>✓ 上传成功</b><br>"+escapeHtml(file.name)+" 已加入 "+unit+" 的知识库。"+(content.length>0?` 共读取 ${content.length} 个字符。`:"");
+  input.value="";
+ }catch(e){result.style.display="block";result.innerHTML="<b>上传失败：</b>"+escapeHtml(e.message||String(e))}
+}
+
+function exportData(){
+ const payload=Object.assign({},state,{vocabMemory:vocabStore(),generatedQuestions:generatedStore()});
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="Deutsch_Training_Lab_学习记录_"+new Date().toISOString().slice(0,10)+".json";a.click();
+ setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function importData(ev){
+ const f=ev.target.files[0]; if(!f)return;
+ const r=new FileReader();
+ r.onload=()=>{
+  try{
+   const x=JSON.parse(r.result);
+   if(!x || typeof x!=="object")throw new Error();
+   state=Object.assign({},DEFAULT_STATE,x);
+   if(x.vocabMemory)localStorage.setItem(VK,JSON.stringify(x.vocabMemory));
+   if(x.generatedQuestions)localStorage.setItem(GEN_KEY,JSON.stringify(x.generatedQuestions));
+   saveState();alert("学习记录、单词掌握记录和生成题记录已导入。");
+  }catch(e){alert("导入失败：不是有效的本网站 JSON 数据。");}
+ };
+ r.readAsText(f);
+}
+function resetProgress(){
+ if(!confirm("确定清空所有学习记录、错题、复习计划和自定义知识吗？"))return;
+ state=structuredClone(DEFAULT_STATE);saveState();
+}
+
+function renderDataOverview(){
+ const skillEntries=Object.entries(state.skills||{}).sort((a,b)=>((b[1].wrong||0)-(a[1].wrong||0)));
+ document.getElementById("dataOverview").innerHTML=
+  "<p>累计答题：<b>"+state.total+"</b>　正确：<b>"+state.correct+"</b>　错误：<b>"+state.wrong+"</b></p>"+
+  "<p>闪卡记住："+(state.flashKnown||0)+"　自定义知识："+(state.customMaterials||[]).length+"　待复习："+dueCount()+"</p>"+
+  "<hr><h4>知识点表现</h4>"+
+  (skillEntries.length?skillEntries.map(([s,v])=>"<div class='skillrow'><b>"+escapeHtml(s)+"</b>：对 "+(v.right||0)+" / 错 "+(v.wrong||0)+" / 连续正确 "+(v.streak||0)+"</div>").join(""):"<p class='muted'>尚无答题记录。</p>");
+}
+
+function renderAll(){
+ renderStats();renderUnitGrid();renderGrammar();renderWords();renderReview();renderMistakes();renderSourceCatalog();renderCustomMaterials();renderDataOverview();
+}
+
+/* ==================== AI-STYLE LOCAL QUESTION GENERATOR ====================
+   This module creates fresh variants from the existing source-grounded
+   knowledge patterns. It does not invent new textbook content.
+============================================================================= */
+const GEN_KEY = "DeutschTrainingLab_GeneratedQuestions_v1";
+
+const GEN_TEMPLATES = [
+  {
+    skill:"E7-Perfekt助动词", unit:"E7", category:"Perfekt",
+    make:()=> {
+      const data=[
+        ["Ich ___ gestern nach Berlin gefahren.","bin","habe","bin","Perfekt 中表示移动的 fahren 使用 sein：Ich bin ... gefahren。"],
+        ["Wir ___ gestern lange geschlafen.","haben","sind","haben","schlafen 在这里使用 haben：Wir haben geschlafen。"],
+        ["Sie ___ am Abend nach Hause gegangen.","ist","hat","ist","gehen 表示移动，Perfekt 使用 sein：Sie ist gegangen。"],
+        ["Ich ___ viel Deutsch gelernt.","habe","bin","habe","lernen 使用 haben：Ich habe gelernt。"],
+        ["Er ___ nach München geflogen.","ist","hat","ist","fliegen 表示移动，使用 sein：Er ist geflogen。"]
+      ];
+      const x=data[Math.floor(Math.random()*data.length)];
+      return {q:x[0],opts:shuffle([x[1],x[2],"war","hatte"]),a:null,correctText:x[2],e:x[3],type:"choice"};
+    }
+  },
+  {
+    skill:"E7-PartizipII-规则", unit:"E7", category:"Perfekt",
+    make:()=> {
+      const data=[
+        ["machen","gemacht"],["lernen","gelernt"],["spielen","gespielt"],
+        ["kaufen","gekauft"],["fragen","gefragt"],["arbeiten","gearbeitet"]
+      ];
+      const x=data[Math.floor(Math.random()*data.length)];
+      const wrong=[x[0]+"en", "ge"+x[0], x[0]+"t"].filter(z=>z!==x[1]);
+      return {q:x[0]+" 的 Partizip II 是：",opts:shuffle([x[1],...wrong]),a:null,correctText:x[1],
+        e:"这是规则动词的常见 Partizip-II 形式。当前题目来自已上传 Perfekt 工作表所覆盖的规则构词模式。",
+        type:"choice"};
+    }
+  },
+  {
+    skill:"E7-PartizipII-ieren", unit:"E7", category:"Perfekt",
+    make:()=> {
+      const data=[["studieren","studiert"],["fotografieren","fotografiert"],["telefonieren","telefoniert"]];
+      const x=data[Math.floor(Math.random()*data.length)];
+      return {q:x[0]+" 的 Partizip II 是：",
+        opts:shuffle([x[1],"ge"+x[1],x[0]+"te",x[0]+"en"]),a:null,correctText:x[1],
+        e:"上传的 Perfekt 工作表专门区分 -ieren 结尾动词：Partizip II 不加 ge-，例如 "+x[0]+" → "+x[1]+"。",
+        type:"choice"};
+    }
+  },
+  {
+    skill:"E7-PartizipII-不可分前缀", unit:"E7", category:"Perfekt",
+    make:()=> {
+      const data=[["besuchen","besucht"],["bezahlen","bezahlt"],["erzählen","erzählt"]];
+      const x=data[Math.floor(Math.random()*data.length)];
+      return {q:x[0]+" 的 Partizip II 是：",
+        opts:shuffle([x[1],"ge"+x[1],x[0]+"t",x[0]+"en"]),a:null,correctText:x[1],
+        e:"不可分前缀动词不加 ge-。这是当前上传 Perfekt 工作表中的构词规则。",
+        type:"choice"};
+    }
+  },
+  {
+    skill:"E7-PartizipII可分动词", unit:"E7", category:"Perfekt",
+    make:()=> {
+      const data=[["einladen","eingeladen"],["aufstehen","aufgestanden"],["einkaufen","eingekauft"]];
+      const x=data[Math.floor(Math.random()*data.length)];
+      return {q:x[0]+" 的 Partizip II 是：",
+        opts:shuffle([x[1],"ge"+x[0],x[0]+"t",x[0]+"en"]),a:null,correctText:x[1],
+        e:"可分动词的 ge- 位于前缀与词干之间；上传的工作表对此进行了专门练习。",
+        type:"choice"};
+    }
+  },
+  {
+    skill:"E6-Dativ动词", unit:"E6", category:"Dativ",
+    make:()=> {
+      const data=[
+        ["Die Musik gefällt ___.","mir","mich","mir"],
+        ["Ich danke ___.","dir","dich","dir"],
+        ["Das Essen schmeckt ___.","ihm","ihn","ihm"],
+        ["Das Buch gehört ___.","uns","wir","uns"]
+      ];
+      const x=data[Math.floor(Math.random()*data.length)];
+      return {q:x[0],opts:shuffle([x[1],x[2],"mein"]),a:null,correctText:x[3],
+        e:"上传的 E6 材料将这些动词列在 Verben mit Dativ 中，因此人称代词使用第三格。",
+        type:"choice"};
+    }
+  },
+  {
+    skill:"E6-Präpositionen", unit:"E6", category:"介词",
+    make:()=> {
+      const data=[
+        ["Ich habe Angst ___ etwas.","vor","für"],
+        ["Ich bin stolz ___ meine Freundin.","auf","vor"],
+        ["Wir fahren ___ U-Bahn.","mit der","für die"],
+        ["Er spricht ___ seinem Freund.","mit","für"]
+      ];
+      const x=data[Math.floor(Math.random()*data.length)];
+      return {q:x[0],opts:shuffle([x[1],x[2],"von","zu"]),a:null,correctText:x[1],
+        e:"本题从上传的 E6 固定介词/表达范围中生成变式；重点是识别固定介词搭配。",
+        type:"choice"};
+    }
+  },
+  {
+    skill:"E8-Wohin-Wo", unit:"E8", category:"介词/位置",
+    make:()=> {
+      const data=[
+        ["Ich gehe ___ Küche.","in die","in der"],
+        ["Wir kochen ___ Küche.","in der","in die"],
+        ["Das Buch liegt ___ Tisch.","auf dem","auf den"],
+        ["Ich stelle das Buch ___ Tisch.","auf den","auf dem"]
+      ];
+      const x=data[Math.floor(Math.random()*data.length)];
+      return {q:x[0],opts:shuffle([x[1],x[2],"an die","bei dem"]),a:null,correctText:x[1],
+        e:"E8 训练的核心是区分方向（Wohin）与静态位置（Wo），从而判断 Akkusativ / Dativ。",
+        type:"choice"};
+    }
+  },
+  {
+    skill:"E8-固定介词", unit:"E8", category:"介词",
+    make:()=> {
+      const data=[
+        ["Pflanzen sorgen ___ gute Luft.","für","zu"],
+        ["Das führt ___ Problemen.","zu","für"],
+        ["Er überzeugt mich ___ seiner Idee.","von","zu"],
+        ["Er überredet mich ___ einem Umzug.","zu","von"]
+      ];
+      const x=data[Math.floor(Math.random()*data.length)];
+      return {q:x[0],opts:shuffle([x[1],x[2],"mit","auf"]),a:null,correctText:x[1],
+        e:"该固定搭配来自上传的 E8 词汇材料。变式只改变句子/搭配，核心知识点不变。",
+        type:"choice"};
+    }
+  }
+];
+
+function shuffle(a){ return [...a].sort(()=>Math.random()-.5); }
+
+function generatedStore(){
+  try{return JSON.parse(localStorage.getItem(GEN_KEY)||"[]")}catch(e){return []}
+}
+function saveGeneratedStore(x){localStorage.setItem(GEN_KEY,JSON.stringify(x.slice(-500)))}
+
+function makeGeneratedQuestion(skill){
+  const candidates=GEN_TEMPLATES.filter(t=>t.skill===skill);
+  if(!candidates.length)return null;
+  const obj=candidates[Math.floor(Math.random()*candidates.length)].make();
+  obj.generated=true; obj.skill=skill; obj.unit=candidates[0].unit;
+  if(obj.a===null)obj.a=obj.opts.indexOf(obj.correctText);
+  obj.id="G"+Date.now()+Math.random().toString(16).slice(2);
+  return obj;
+}
+
+function skillsNeedingGeneration(){
+  return Object.entries(state.skills||{})
+    .filter(([s,v])=>(v.wrong||0)>=1)
+    .sort((a,b)=>(b[1].wrong||0)-(a[1].wrong||0))
+    .map(x=>x[0])
+    .filter(s=>GEN_TEMPLATES.some(t=>t.skill===s));
+}
+
+function generateFreshSet(n=10){
+  const weak=skillsNeedingGeneration();
+  const available=weak.length?weak:GEN_TEMPLATES.map(x=>x.skill);
+  const generated=[];
+  for(let i=0;i<n;i++){
+    const skill=available[i%available.length];
+    const q=makeGeneratedQuestion(skill);
+    if(q)generated.push(q);
+  }
+  const store=generatedStore();
+  saveGeneratedStore(store.concat(generated));
+  return generated;
+}
+
+function startGeneratedPractice(){
+  const fresh=generateFreshSet(10);
+  if(!fresh.length){alert("当前资料还没有可自动生成变式题的知识点。");return;}
+  session={queue:fresh.map(q=>q),pos:0,correct:0,mode:"generated",current:null,answered:false};
+  go("quiz");showGeneratedQuestion();
+}
+
+function showGeneratedQuestion(){
+  if(session.pos>=session.queue.length){
+    document.getElementById("qtext").textContent="自动变式训练完成 🎉";
+    document.getElementById("options").innerHTML="";
+    document.getElementById("fillbox").innerHTML="";
+    document.getElementById("feedback").innerHTML="<div class='answer ok'><b>"+session.correct+" / "+session.queue.length+"</b><br>这轮是根据你的知识点表现实时生成的变式题。下一轮会继续重新生成。</div>";
+    document.getElementById("progress").textContent="完成";
+    document.getElementById("bar").style.width="100%";
+    return;
+  }
+  const q=session.queue[session.pos];session.current=q;session.answered=false;
+  document.getElementById("qtype").textContent=q.category+" · 自动变式";
+  document.getElementById("progress").textContent=(session.pos+1)+" / "+session.queue.length;
+  document.getElementById("qtext").textContent=q.q;
+  document.getElementById("feedback").innerHTML="";
+  document.getElementById("fillbox").innerHTML="";
+  document.getElementById("bar").style.width=(session.pos/session.queue.length*100)+"%";
+  const opts=document.getElementById("options");opts.innerHTML="";
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement("button");b.className="option";b.textContent=o;
+    b.onclick=()=>answerGenerated(i);opts.appendChild(b);
+  });
+}
+function answerGenerated(i){
+  if(session.answered)return;
+  const q=session.current;session.answered=true;
+  const ok=i===q.a;
+  state.total++;state.correct+=ok?1:0;state.wrong+=ok?0:1;
+  if(!state.skills[q.skill])state.skills[q.skill]={right:0,wrong:0,streak:0};
+  const st=state.skills[q.skill];
+  if(ok){st.right++;st.streak=(st.streak||0)+1}else{st.wrong++;st.streak=0}
+  updateSchedule(q.skill,ok);
+  if(!ok){
+    state.mistakes.unshift({time:new Date().toISOString(),unit:q.unit,skill:q.skill,q:q.q,
+      correct:q.opts[q.a],user:q.opts[i],explanation:q.e,generated:true});
+    state.mistakes=state.mistakes.slice(0,200);
+  }
+  saveState();
+  document.querySelectorAll("#options .option").forEach((b,j)=>{
+    if(j===q.a)b.classList.add("correct");
+    if(j===i&&!ok)b.classList.add("wrong");
+  });
+  const box=document.createElement("div");box.className="answer "+(ok?"ok":"bad");
+  box.innerHTML="<b>"+(ok?"✓ 正确":"✗ 错误")+"</b><br>"+(!ok?("<b>正确答案：</b>"+escapeHtml(q.opts[q.a])+"<br>"):"")+escapeHtml(q.e);
+  document.getElementById("feedback").appendChild(box);
+  session.correct+=ok?1:0;
+}
+function nextGenerated(){session.pos++;showGeneratedQuestion()}
+
+/* Add a prominent control to the homepage without changing the original layout. */
+function addGeneratorButton(){
+  const homeCard=document.querySelector("#home .card");
+  if(!homeCard || document.getElementById("generatedBtn"))return;
+  const b=document.createElement("button");
+  b.id="generatedBtn";b.className="primary";b.textContent="✨ 根据薄弱点生成10道新变式题";
+  b.onclick=startGeneratedPractice;
+  const p=homeCard.querySelector("p:last-child");
+  if(p)p.appendChild(b);else homeCard.appendChild(b);
+  const note=document.createElement("div");note.className="notice";note.style.marginTop="12px";
+  note.innerHTML="<b>新增功能：</b>系统会读取你的错题/知识点表现，从现有资料支持的题型模板中重新组合句子与选项，生成新的变式题，而不是永远重复固定题目。";
+  homeCard.appendChild(note);
+}
+addGeneratorButton();
+
+/* Make the existing next button work for generated sessions too. */
+const oldNextQuestion=nextQuestion;
+nextQuestion=function(){
+  if(session.mode==="generated"){nextGenerated();return}
+  oldNextQuestion();
+};
+
+
+/* ==================== VOCABULARY MEMORY MODULE ==================== */
+const FULL_VOCAB = [{"unit": "E1", "raw": "Lieder singen 唱歌"}, {"unit": "E1", "raw": "Musik hören 听音乐"}, {"unit": "E1", "raw": "gern reisen 喜欢旅行"}, {"unit": "E1", "raw": "Übungen machen 做练习"}, {"unit": "E1", "raw": "Deutsch lernen 学习德语"}, {"unit": "E1", "raw": "Wörter buchstabieren 拼单词"}, {"unit": "E1", "raw": "Texte wiederholen 复习课文"}, {"unit": "E1", "raw": "Deutschland kennen 了解德国"}, {"unit": "E1", "raw": "die Lehrerin fragen 问老师"}, {"unit": "E1", "raw": "ein Foto zeigen 展示一张照片"}, {"unit": "E2", "raw": "Taiji machen / üben 打太极拳"}, {"unit": "E2", "raw": "nichts sagen 什么都没说"}, {"unit": "E2", "raw": "Blogs schreiben 写博客"}, {"unit": "E2", "raw": "Fußball spielen 踢足球"}, {"unit": "E2", "raw": "Klavier spielen 弹钢琴"}, {"unit": "E2", "raw": "Beispiele nennen 举例"}, {"unit": "E2", "raw": "oft joggen 经常慢跑"}, {"unit": "E2", "raw": "eine Karte ziehen 抽出一张卡片"}, {"unit": "E2", "raw": "Fehler machen 犯错"}, {"unit": "E2", "raw": "eine Rolle spielen 扮演一个角色"}, {"unit": "E2", "raw": "ein paar (= einige) 一些"}, {"unit": "E3", "raw": "zu Abend essen 吃晚餐"}, {"unit": "E3", "raw": "vegetarisch essen 素食"}, {"unit": "E3", "raw": "gesund essen 吃得健康"}, {"unit": "E3", "raw": "jdm. (bei etw.D) helfen 帮助某人（做某事）"}, {"unit": "E3", "raw": "es gibt +Akk. 有，存在"}, {"unit": "E3", "raw": "Sport machen / treiben 做运动"}, {"unit": "E3", "raw": "eine Vorlesung haben 有大课"}, {"unit": "E3", "raw": "einen Termin haben 有约，有安排"}, {"unit": "E3", "raw": "ein Problem haben 有麻烦，有问题"}, {"unit": "E3", "raw": "Hunger haben (= hungrig sein) 饿了"}, {"unit": "E3", "raw": "Recht haben 说得对"}, {"unit": "E3", "raw": "eine gute Idee 一个好主意"}, {"unit": "E3", "raw": "die Kultur kennen lernen 了解文化"}, {"unit": "E3", "raw": "die Hausaufgaben schreiben / machen 做作业"}, {"unit": "E3", "raw": "Tut mir leid. 我很抱歉。"}, {"unit": "E3", "raw": "jdm. Bescheid sagen 告知某人（某事）"}, {"unit": "E3", "raw": "jeden Tag (= täglich) 每天"}, {"unit": "E3", "raw": "das Essen bestellen 点菜"}, {"unit": "E3", "raw": "alles auf/essen 全都吃完"}, {"unit": "E3", "raw": "kleine Portionen an/bieten 提供小份食物"}, {"unit": "E3", "raw": "Lebensmittel sparen 节约食物"}, {"unit": "E3", "raw": "zusammen / getrennt zahlen 一起/分开支付"}, {"unit": "E3", "raw": "bis 10 zählen 数到 10"}, {"unit": "E3", "raw": "noch einmal / mal 再一次"}, {"unit": "E3", "raw": "das nächste Mal 下次"}, {"unit": "E4", "raw": "einkaufen gehen 去购物"}, {"unit": "E4", "raw": "Einkäufe machen 采购"}, {"unit": "E4", "raw": "alles haben 什么都有"}, {"unit": "E4", "raw": "nichts brauchen 什么都不需要"}, {"unit": "E4", "raw": "den Apfel probieren 试吃苹果"}, {"unit": "E4", "raw": "Schlange stehen 排队"}, {"unit": "E4", "raw": "eine Torte backen 烘焙一个蛋糕"}, {"unit": "E4", "raw": "Medizin nehmen 吃药"}, {"unit": "E4", "raw": "viel Müll produzieren 制造很多垃圾"}, {"unit": "E4", "raw": "Kein Problem! 没问题！"}, {"unit": "E4", "raw": "Macht nichts. 没关系。"}, {"unit": "E4", "raw": "Das macht zusammen ... 共计……"}, {"unit": "E4", "raw": "Einen schönen Tag (noch). 祝（您/你）今天过得愉快！"}, {"unit": "E4", "raw": "Gleichfalls! 您/你也一样！"}, {"unit": "E4", "raw": "ein Beutel Toastbrot 一袋吐司面包"}, {"unit": "E4", "raw": "ein Bund Bananen 一串香蕉"}, {"unit": "E4", "raw": "ein Netz Orangen 一网兜橙子"}, {"unit": "E4", "raw": "zwei Glas Marmelade 两瓶果酱"}, {"unit": "E4", "raw": "ein Stück Käse 一块奶酪"}, {"unit": "E4", "raw": "eine Packung Schinken 一包火腿"}, {"unit": "E4", "raw": "eine Tafel Schokolade 一板巧克力"}, {"unit": "E4", "raw": "zwei Tüten Chips 两袋薯片"}, {"unit": "E4", "raw": "eine Schale Erdbeeren 一盒草莓"}, {"unit": "E4", "raw": "eine Packung Milch 一盒牛奶"}, {"unit": "E4", "raw": "eine Flasche Wasser 一瓶水"}, {"unit": "E4", "raw": "eine Dose Cola 一听可乐"}, {"unit": "E4", "raw": "ein bisschen (= ein wenig) 一点"}, {"unit": "E4", "raw": "Es ist nett von dir. 你真好。"}, {"unit": "E5", "raw": "jdn. interessieren 让某人感兴趣"}, {"unit": "E5", "raw": "jdn. freuen 让某人高兴"}, {"unit": "E5", "raw": "jdn. an/rufen 给某人打电话"}, {"unit": "E5", "raw": "jdn. besuchen 拜访某人"}, {"unit": "E5", "raw": "eine Karte besorgen 搞一张票/卡"}, {"unit": "E5", "raw": "den Haushalt machen 做家务"}, {"unit": "E5", "raw": "nichts / etwas / viel vor/haben 没有安排/有些安排/有很多安排"}, {"unit": "E5", "raw": "früh auf/stehen 早起"}, {"unit": "E5", "raw": "im Unterricht gut auf/passen 在课堂上集中注意力"}, {"unit": "E5", "raw": "einen Film an/sehen 观看一部电影"}, {"unit": "E5", "raw": "schnell ein/schlafen 快速入睡"}, {"unit": "E5", "raw": "(eine) Pause machen 休息"}, {"unit": "E5", "raw": "im Internet surfen 上网"}, {"unit": "E5", "raw": "spazieren gehen 去散步"}, {"unit": "E5", "raw": "eine Bachelorarbeit betreuen 辅导一篇学士论文"}, {"unit": "E5", "raw": "Geld verdienen 赚钱"}, {"unit": "E5", "raw": "Nachhilfeunterricht geben 作为家教给别人补课"}, {"unit": "E5", "raw": "Nachhilfeunterricht bekommen 补课"}, {"unit": "E5", "raw": "die Freizeit genießen 享受业余时间"}, {"unit": "E5", "raw": "etw.N macht jdm. Spaß 某事给某人带来乐趣"}, {"unit": "E5", "raw": "zu spät kommen 迟到"}, {"unit": "E5", "raw": "Platz nehmen 就坐"}, {"unit": "E5", "raw": "jdm. einen Vorschlag machen 给某人提一个建议"}, {"unit": "E5", "raw": "die Wohnung auf/räumen 收拾屋子"}, {"unit": "E5", "raw": "die Wäsche waschen 洗衣服"}, {"unit": "E5", "raw": "den Stress ab/bauen 减压"}, {"unit": "E5", "raw": "wenig fern/sehen 少看电视"}, {"unit": "E5", "raw": "irgendwo an/kommen 到达某地"}, {"unit": "E5", "raw": "jdn. ab/holen 接某人"}, {"unit": "E1–E5", "raw": "das Handy aus/schalten 关闭手机"}, {"unit": "E1–E5", "raw": "etw.N findet statt 某活动如期举行"}, {"unit": "E1–E5", "raw": "Flyer verteilen 分发传单"}, {"unit": "E1–E5", "raw": "den Termin verschieben 推迟日程"}, {"unit": "E1–E5", "raw": "den Bus verpassen 错过公共汽车"}, {"unit": "E1–E5", "raw": "diese Woche 这周"}, {"unit": "E1–E5", "raw": "nächste Woche 下周"}, {"unit": "E1–E5", "raw": "aus China kommen 来自中国"}, {"unit": "E1–E5", "raw": "von hier kommen 来自本地"}, {"unit": "E1–E5", "raw": "auf der Speisekarte 菜单上"}, {"unit": "E1–E5", "raw": "in Shanghai leben 在上海生活"}, {"unit": "E1–E5", "raw": "im Wohnheim wohnen 住在宿舍"}, {"unit": "E1–E5", "raw": "in der Mitte 在中间"}, {"unit": "E1–E5", "raw": "in der Nähe 在附近"}, {"unit": "E1–E5", "raw": "in Ordnung 可以，没问题"}, {"unit": "E5", "raw": "im Internet 在网上"}, {"unit": "E1–E5", "raw": "im Sonderangebot 特价"}, {"unit": "E1–E5", "raw": "ins Kino gehen 去看电影"}, {"unit": "E1–E5", "raw": "ins Fitnessstudio gehen 去健身房"}, {"unit": "E1–E5", "raw": "in der Mensa essen 在食堂吃饭"}, {"unit": "E1–E5", "raw": "in die Mensa gehen 去食堂吃饭"}, {"unit": "E1–E5", "raw": "in der Bibliothek recherchieren 在图书馆查找资料"}, {"unit": "E1–E5", "raw": "in die Bibliothek gehen 去图书馆"}, {"unit": "E1–E5", "raw": "im Restaurant essen 在饭店吃饭"}, {"unit": "E1–E5", "raw": "ins Restaurant gehen 去饭店吃饭"}, {"unit": "E1–E5", "raw": "im Supermarkt einkaufen 在超市采购"}, {"unit": "E1–E5", "raw": "in den Supermarkt gehen 去超市"}, {"unit": "E1–E5", "raw": "in der Stadt leben 住在城里"}, {"unit": "E1–E5", "raw": "in die Stadt fahren 进城"}, {"unit": "E1–E5", "raw": "im Park ein Picknick machen 在公园里野餐"}, {"unit": "E1–E5", "raw": "in den Park gehen 去公园"}, {"unit": "E1–E5", "raw": "im Buchladen lesen 在书店看书"}, {"unit": "E1–E5", "raw": "in den Buchladen gehen 去书店"}, {"unit": "E1–E5", "raw": "im Bett schlafen 在床上睡觉"}, {"unit": "E1–E5", "raw": "ins Bett gehen 上床睡觉"}, {"unit": "E1–E5", "raw": "auf dem Markt einkaufen 在市场买菜"}, {"unit": "E1–E5", "raw": "auf den Markt gehen 去市场"}, {"unit": "E1–E5", "raw": "an der Kasse schlange stehen 在收银台排队"}, {"unit": "E1–E5", "raw": "an die Kasse gehen 去收银台"}, {"unit": "E1–E5", "raw": "an der Reihe sein 轮到了"}, {"unit": "E1–E5", "raw": "an die Reihe kommen 轮到"}, {"unit": "E1–E5", "raw": "zur Arbeit gehen 去上班"}, {"unit": "E1–E5", "raw": "zum Unterricht gehen 去上课"}, {"unit": "E1–E5", "raw": "zum Picknick gehen 去野餐"}, {"unit": "E1–E5", "raw": "nach Deutschland reisen 去德国旅行"}, {"unit": "E1–E5", "raw": "eine Reise nach Deutschland machen 去德国旅行"}, {"unit": "E1–E5", "raw": "zu Hause sein / bleiben （呆）在家"}, {"unit": "E1–E5", "raw": "nach Hause gehen 回家"}, {"unit": "E1–E5", "raw": "in der Freizeit 在业余时间"}, {"unit": "E1–E5", "raw": "in zwei Wochen 两周后"}, {"unit": "E1–E5", "raw": "im Voraus 事先"}, {"unit": "E1–E5", "raw": "im Jahr 一年"}, {"unit": "E1–E5", "raw": "im Monat 一个月"}, {"unit": "E1–E5", "raw": "in der Woche 一周"}, {"unit": "E1–E5", "raw": "am Dienstag 在周二"}, {"unit": "E1–E5", "raw": "am Vormittag 在上午"}, {"unit": "E1–E5", "raw": "am Wochenende 在周末"}, {"unit": "E1–E5", "raw": "in der Nacht 在深夜"}, {"unit": "E1–E5", "raw": "um 8 Uhr 在 8 点"}, {"unit": "E1–E5", "raw": "mit jdm. telefonieren 与某人通电话"}, {"unit": "E1–E5", "raw": "Nudeln mit Pilzen 菌菇面"}, {"unit": "E1–E5", "raw": "an der Tongji-Universität ... studieren 在同济大学修读……专业"}, {"unit": "E1–E5", "raw": "eine Nachricht an jdn. schreiben 给某人发消息"}, {"unit": "E1–E5", "raw": "über ...(Akk.) sprechen 谈论某事"}, {"unit": "E1–E5", "raw": "von ...(Dat.) sprechen 谈及某事"}, {"unit": "E1–E5", "raw": "zu Ende sein 结束"}, {"unit": "E1–E5", "raw": "zu Ende gehen 结束"}, {"unit": "E1–E5", "raw": "zum Beispiel 例如"}, {"unit": "E1–E5", "raw": "etw.N gehört zu etw.D ……属于……的一部分"}, {"unit": "E1–E5", "raw": "etw.N wird zu etw.D ……（升级）成为……"}, {"unit": "E1–E5", "raw": "bei Huawei arbeiten 在华为工作"}, {"unit": "E1–E5", "raw": "aus Baumwolle 棉质"}, {"unit": "E1–E5", "raw": "Es geht um ...(Akk.) 主题是……"}, {"unit": "E1–E5", "raw": "jdn. um ...(Akk.) bitten 向某人祈求某物"}, {"unit": "E1–E5", "raw": "(keine) Zeit für ... haben （没）有时间……"}, {"unit": "E1–E5", "raw": "für ... wichtig sein 对于……重要"}, {"unit": "E1–E5", "raw": "für ... gefährlich und schädlich sein 对于……危险且有害"}, {"unit": "E1–E5", "raw": "vielen Dank für ... 非常感谢……"}, {"unit": "E1–E5", "raw": "sichD Zeit für ... nehmen 为……花时间"}, {"unit": "E1–E5", "raw": "(Geld) für ... aus/geben 为……花多少钱"}, {"unit": "E1–E5", "raw": "auf Englisch 用英语"}, {"unit": "E1–E5", "raw": "von Montag bis Freitag 从周一到周五"}, {"unit": "E1–E5", "raw": "von acht bis zwölf 从 8 点到 12 点"}, {"unit": "E1–E5", "raw": "von früh bis spät 从早到晚"}, {"unit": "E6", "raw": "etwas macht jemandem Spaß 某事让某人觉得有趣/开心"}, {"unit": "E6", "raw": "jemanden/etwas Adj. machen 使某人/某物……"}, {"unit": "E6", "raw": "im Internet surfen 上网"}, {"unit": "E6", "raw": "Freunde treffen 和朋友见面"}, {"unit": "E6", "raw": "ins Kino gehen 去电影院"}, {"unit": "E6", "raw": "eine Komödie ansehen 看一部喜剧"}, {"unit": "E6", "raw": "Modellautos bauen 制作模型汽车"}, {"unit": "E6", "raw": "Basketball spielen 打篮球"}, {"unit": "E6", "raw": "Schach spielen 下国际象棋"}, {"unit": "E6", "raw": "Gitarre spielen 弹吉他"}, {"unit": "E6", "raw": "etwas interessiert jemanden 某事使某人感兴趣"}, {"unit": "E6", "raw": "etwas begeistert jemanden 某事使某人着迷"}, {"unit": "E6", "raw": "die Karten auf das Poster kleben 把卡片贴到海报上"}, {"unit": "E6", "raw": "das Foto ausdrucken 把照片打印出来"}, {"unit": "E6", "raw": "die Kultur verstehen 理解文化"}, {"unit": "E6", "raw": "Platz nehmen 就座"}, {"unit": "E6", "raw": "leicht erkranken 轻易生病"}, {"unit": "E6", "raw": "leicht krank werden 容易生病"}, {"unit": "E6", "raw": "Mitglieder werben 招募成员"}, {"unit": "E6", "raw": "blass aussehen 看起来脸色苍白"}, {"unit": "E6", "raw": "einmal in der Woche 每周一次"}, {"unit": "E6", "raw": "die Konzentrationsfähigkeit fördern 促进注意力"}, {"unit": "E6", "raw": "die Schlafqualität verbessern 改善睡眠质量"}, {"unit": "E6", "raw": "etwas geht jemandem auf die Nerven 某事让某人烦恼"}, {"unit": "E6", "raw": "den Knien / der Gesundheit schaden 损害膝盖/健康"}, {"unit": "E6", "raw": "gesund abnehmen 健康减重"}, {"unit": "E6", "raw": "mit jemandem ein Interview führen 和某人进行采访"}, {"unit": "E6", "raw": "einen Bericht über etwas schreiben 写一篇关于某事的报道"}, {"unit": "E6", "raw": "ein Ehrenamt ausüben 从事志愿服务"}, {"unit": "E6", "raw": "ehrenamtlich arbeiten 做志愿工作"}, {"unit": "E6", "raw": "als Freiwillige(r) arbeiten 作为志愿者工作"}, {"unit": "E6", "raw": "etwas für die Gesellschaft tun 为社会做某事"}, {"unit": "E6", "raw": "den Umgang mit jemandem lernen 学会与某人相处"}, {"unit": "E6", "raw": "Germanistik studieren 学习日耳曼语言文学"}, {"unit": "E6", "raw": "etwas sauber machen 把某物弄干净"}, {"unit": "E6", "raw": "Aufgaben selbstständig übernehmen 独立承担任务"}, {"unit": "E6", "raw": "viele Kontakte aufnehmen 结识/建立很多联系"}, {"unit": "E6", "raw": "viele Erfahrungen sammeln 积累很多经验"}, {"unit": "E6", "raw": "an etwas teilnehmen 参加某事"}, {"unit": "E6", "raw": "in etwas geraten 陷入某种情况"}, {"unit": "E6", "raw": "Stress abbauen 减压"}, {"unit": "E6", "raw": "Stress reduzieren 减少压力"}, {"unit": "E6", "raw": "eine Anforderung an jemanden stellen 向某人提出要求"}, {"unit": "E6", "raw": "nicht/kein ..., sondern ... 不是……而是……"}, {"unit": "E6", "raw": "nicht nur ..., sondern auch ... 不仅……而且……"}, {"unit": "E6", "raw": "zwar ..., aber ... 虽然……但是……"}, {"unit": "E6", "raw": "jemandem helfen 帮助某人"}, {"unit": "E6", "raw": "jemandem für etwas danken 因某事感谢某人"}, {"unit": "E6", "raw": "jemandem auf etwas antworten 回答某人关于某事的问题"}, {"unit": "E6", "raw": "jemandem zu etwas gratulieren 祝贺某人某事"}, {"unit": "E6", "raw": "etwas gefällt jemandem 某物使某人喜欢"}, {"unit": "E6", "raw": "etwas schmeckt jemandem 某物合某人的口味"}, {"unit": "E6", "raw": "etwas fehlt jemandem 某人缺少某物"}, {"unit": "E6", "raw": "etwas gehört jemandem 某物属于某人"}, {"unit": "E6", "raw": "etwas passt jemandem 某物适合某人"}, {"unit": "E6", "raw": "etwas nützt jemandem 某物对某人有用"}, {"unit": "E6", "raw": "jemandem etwas geben 给某人某物"}, {"unit": "E6", "raw": "jemandem etwas erklären 向某人解释某事"}, {"unit": "E6", "raw": "jemandem etwas erzählen 向某人讲述某事"}, {"unit": "E6", "raw": "jemandem etwas zeigen 给某人看某物"}, {"unit": "E6", "raw": "jemandem etwas empfehlen 向某人推荐某物"}, {"unit": "E6", "raw": "jemandem etwas beibringen 教某人某事"}, {"unit": "E6", "raw": "jemanden in etwas unterrichten 教授某人某方面"}, {"unit": "E6", "raw": "jemandem etwas beschreiben 向某人描述某事"}, {"unit": "E6", "raw": "jemandem Hilfe leisten 帮助某人"}, {"unit": "E6", "raw": "jemandem Geschichten vorlesen 给某人朗读故事"}, {"unit": "E6", "raw": "in der Freizeit 在业余时间"}, {"unit": "E6", "raw": "in den Ferien 在假期"}, {"unit": "E6", "raw": "auf Deutsch 用德语"}, {"unit": "E6", "raw": "zu viert 四个人一起"}, {"unit": "E6", "raw": "am liebsten 最喜欢"}, {"unit": "E6", "raw": "gut/schädlich für jemanden/etwas sein 对某人/某物有益/有害"}, {"unit": "E6", "raw": "bei uns in Deutschland 在我们德国这里"}, {"unit": "E6", "raw": "Lust auf etwas haben 想要某事/有兴趣做某事"}, {"unit": "E6", "raw": "Angst vor etwas haben 害怕某事"}, {"unit": "E6", "raw": "bei jemandem beliebt sein 受某人欢迎"}, {"unit": "E6", "raw": "auf etwas/jemanden stolz sein 为某事/某人感到自豪"}, {"unit": "E6", "raw": "ein Ausgleich zu etwas 对某事的平衡/调剂"}, {"unit": "E6", "raw": "etwas aus Spaß machen 为了好玩而做某事"}, {"unit": "E6", "raw": "seit 2024 / seit zwei Jahren 自2024年起/两年以来"}, {"unit": "E6", "raw": "eine Aufgabe ohne Bezahlung 没有报酬的任务"}, {"unit": "E6", "raw": "die Suche nach etwas 寻找某物"}, {"unit": "E6", "raw": "in Maßen 适度地"}, {"unit": "E7", "raw": "einen Spaziergang machen 散步"}, {"unit": "E7", "raw": "ein Referat vorbereiten 准备报告"}, {"unit": "E7", "raw": "ein Referat auf Chinesisch halten 用中文做报告"}, {"unit": "E7", "raw": "das Referat vor dem Publikum üben 在观众面前练习报告"}, {"unit": "E7", "raw": "ein Gesicht wie drei Tage Regenwetter machen 一脸阴沉"}, {"unit": "E7", "raw": "etwas geht schief 某事出了差错"}, {"unit": "E7", "raw": "die Ängste überwinden 克服恐惧"}, {"unit": "E7", "raw": "Fremdsprachen sprechen 说外语"}, {"unit": "E7", "raw": "etwas aus dem Internet herunterladen 从网上下载某物"}, {"unit": "E7", "raw": "Geld für etwas ausgeben 为某物花钱"}, {"unit": "E7", "raw": "ein Taxi nehmen 乘出租车"}, {"unit": "E7", "raw": "etwas unternehmen 做某事/进行活动"}, {"unit": "E7", "raw": "Macht nichts. 没关系。"}, {"unit": "E7", "raw": "Ohne Regen kein Leben. 没有雨水就没有生命。"}, {"unit": "E7", "raw": "Viel Erfolg! 祝成功！"}, {"unit": "E7", "raw": "Was ist los? 怎么了？"}, {"unit": "E7", "raw": "Übung macht den Meister. 熟能生巧。"}, {"unit": "E7", "raw": "Vielen Dank für ... 非常感谢……"}, {"unit": "E7", "raw": "Nichts zu danken. 不客气。"}, {"unit": "E7", "raw": "am Himmel keine Wolke 天空中没有一朵云"}, {"unit": "E7", "raw": "auf den Straßen 在街道上"}, {"unit": "E7", "raw": "auf die Idee kommen 想到这个主意"}, {"unit": "E7", "raw": "auf ... sinken 下降到……"}, {"unit": "E7", "raw": "für ... wichtig sein 对……重要"}, {"unit": "E7", "raw": "für ... zuständig sein 负责……"}, {"unit": "E7", "raw": "im Winter 在冬天"}, {"unit": "E7", "raw": "in der Tat 事实上"}, {"unit": "E7", "raw": "in den Sommerferien 在暑假"}, {"unit": "E7", "raw": "in zwei Wochen 两周后"}, {"unit": "E7", "raw": "mit etwas vertraut sein 熟悉某事"}, {"unit": "E7", "raw": "mit der U-Bahn fahren 乘地铁"}, {"unit": "E7", "raw": "Probleme mit etwas haben 有……方面的问题"}, {"unit": "E7", "raw": "zum Glück 幸运的是"}, {"unit": "E7", "raw": "zum Unterricht gehen 去上课"}, {"unit": "E7", "raw": "zu dem Thema 关于这个主题"}, {"unit": "E7", "raw": "zu Fuß gehen/laufen 步行"}, {"unit": "E7", "raw": "Partizip II 第二分词/过去分词"}, {"raw": "etwasA inOrdnungbringen 整理，使……有序", "unit": "E8"}, {"raw": "etwasN istinOrdnung=etwasN istordentlich 某物整齐有序", "unit": "E8"}, {"raw": "irgendwoherrschtChaos(chaotischAdj.) 某处混乱，杂乱无章", "unit": "E8"}, {"raw": "einige=mehrere=einpaar 一些", "unit": "E8"}, {"raw": "eineMenge 大量", "unit": "E8"}, {"raw": "(inetwasA)ein/treten(ertrittein,isteingetreten) 进入，入场", "unit": "E8"}, {"raw": "mitetwasD an/fangen(erfängtan,hatangefangen) 开始做某事", "unit": "E8"}, {"raw": "jemandenanetwasA erinnern 提醒某人想起某事", "unit": "E8"}, {"raw": "etwasA behalten(erbehält;behielt,hatbehalten) 保留", "unit": "E8"}, {"raw": "effizie．ntAdj. 高效的", "unit": "E8"}, {"raw": "vorallem 首先，特别是", "unit": "E8"}, {"raw": "dieAufmerksamkeiterhöhen 提高注意力", "unit": "E8"}, {"raw": "dieArbeitsmotivationsteigern 提升工作积极性", "unit": "E8"}, {"raw": "etwasA aufetwasA reduzieren 把……降低到……", "unit": "E8"}, {"raw": "dieFreiheitein/schränken 限制自由", "unit": "E8"}, {"raw": "dieDenkfähigkeitbeeinträchtigen 损害思维能力", "unit": "E8"}, {"raw": "denSchreibtischreinigen 清洁办公桌", "unit": "E8"}, {"raw": "dasZimmersaubermachen 打扫房间", "unit": "E8"}, {"raw": "dasZimmerum/stellen 重新放置房间物品位置", "unit": "E8"}, {"raw": "dasZimmerrenovieren 翻新房间", "unit": "E8"}, {"raw": "dasZimmerauf/räumen 收拾整理房间", "unit": "E8"}, {"raw": "etwasA weg/räumen 把某物清理走", "unit": "E8"}, {"raw": "denNachttischausdemZimmerräumen 把床头柜移出房间", "unit": "E8"}, {"raw": "(jemandem)etwasA weg/nehmen 拿走某人某物", "unit": "E8"}, {"raw": "etwasA vermeiden(ervermeidet,vermied,hatvermieden) 避免某物或某事", "unit": "E8"}, {"raw": "etwasA fest/stellen （经过调查研究）确认", "unit": "E8"}, {"raw": "etwasA aus/probieren 尝试", "unit": "E8"}, {"raw": "dieChanceverpassen 错过机会", "unit": "E8"}, {"raw": "jemandenberuhigen 安抚某人", "unit": "E8"}, {"raw": "dieLauneverbessern 改善情绪", "unit": "E8"}, {"raw": "fürjemanden/etwasA sorgen 照顾某人或某物", "unit": "E8"}, {"raw": "etwasA indieentsprechendenOrdnersortieren 把某物归类到相应的文件夹", "unit": "E8"}, {"raw": "einenpositivenEindruck(aufjemanden)machen （给某人）留下一个好印象", "unit": "E8"}, {"raw": "dasBuchbenutzen 使用这本书", "unit": "E8"}, {"raw": "Registerverwenden 使用索引", "unit": "E8"}, {"raw": "Ordnungschaffenundhalten 创造并保持秩序", "unit": "E8"}, {"raw": "etwasGrünes 一些绿植", "unit": "E8"}, {"raw": "etwasNliegtaufderHand 某事显而易见", "unit": "E8"}, {"raw": "etwasA teilen 分；分享", "unit": "E8"}, {"raw": "aufdiese(Artund)Weise 以这种方法", "unit": "E8"}, {"raw": "jemandenvonetwasD überzeugen 劝说某人相信某事", "unit": "E8"}, {"raw": "jemandenzuetwasD überreden 劝说某人去做某事", "unit": "E8"}, {"raw": "jemandenzuetwasD zwingen 强迫某人做某事", "unit": "E8"}, {"raw": "etwasN hängtmitetwasD zusammen 某事与某事相关联", "unit": "E8"}, {"raw": "imZentrumwohnen 住在市中心", "unit": "E8"}, {"raw": "mitjemandem/etwasD zurecht/kommen 和某人合得来；能胜任", "unit": "E8"}, {"raw": "kreuzundquer 横七竖八", "unit": "E8"}, {"raw": "abundzu 偶尔", "unit": "E8"}, {"raw": "überjemanden/etwasAbestimmen 有权支配某人或某物", "unit": "E8"}, {"raw": "mehrPlatzschaffen 腾出空间", "unit": "E8"}, {"raw": "etwasN führtzuetwasD 导致", "unit": "E8"}, {"raw": "etwasN sorgtfüretwasA 导致", "unit": "E8"}, {"raw": "inBezugaufetwasA 关于", "unit": "E8"}, {"raw": "allesweg/werfen 把所有东西都丢弃", "unit": "E8"}, {"raw": "anetwasDvorbei/gehen 路过", "unit": "E8"}, {"raw": "beietwasDvorbei/gehen 顺道拜访", "unit": "E8"}, {"raw": "etwasN istaußerBetrieb 某物不在运行中", "unit": "E8"}, {"raw": "etwasN istinBetrieb 某物在运行中", "unit": "E8"}, {"raw": "inderfünftenEtage 在 6楼", "unit": "E8"}, {"raw": "imfünftenStock 在 6楼", "unit": "E8"}, {"raw": "nachSüdengehen 朝南；往南走", "unit": "E8"}, {"raw": "diePflanzenpflegen 照料植物", "unit": "E8"}, {"raw": "aufdemSofasitzen 坐在长沙发上", "unit": "E8"}, {"raw": "indemSesselsitzen 坐在单人沙发上", "unit": "E8"}, {"raw": "etwasNpasstzuetwasD 某物与某物相配", "unit": "E8"}, {"raw": "etwasNpasstirgendwohin 某物放得进……", "unit": "E8"}, {"raw": "dieKlimaanlageein/schalten 打开空调", "unit": "E8"}, {"raw": "dieKlimaanlageaus/schalten 关闭空调", "unit": "E8"}, {"raw": "guteQualitätversprechen 质量保障", "unit": "E8"}, {"raw": "etwasN wirktirgendwieaufjemanden 某物对某人产生某种影响", "unit": "E8"}, {"raw": "etwasAbetrachten(=etwasAan/sehen) 打量", "unit": "E8"}, {"raw": "inderStadtwohnen 住在城里", "unit": "E8"}, {"raw": "aufdemLandwohnen 住在农村", "unit": "E8"}, {"raw": "vielunternehmen 有很多方式进行娱乐", "unit": "E8"}, {"raw": "insMuseumgehen 去博物馆", "unit": "E8"}, {"raw": "eineAusstellungbesuchen 去看展", "unit": "E8"}, {"raw": "einKulturangebotwahr/nehmen 感受体验文化活动", "unit": "E8"}, {"raw": "indieNaturgehen 去亲近大自然", "unit": "E8"}, {"raw": "imStaustecken 堵车", "unit": "E8"}, {"raw": "mitdemRadalleserreichen 骑车抵达所有地方", "unit": "E8"}, {"raw": "irgendwoauf/wachsen(erwächstauf) 长大", "unit": "E8"}, {"raw": "inderKindheit 在童年", "unit": "E8"}, {"raw": "derengeKontaktzurNatur 与自然的紧密联系", "unit": "E8"}, {"raw": "IchhabeeinProblem. 我有一个麻烦。", "unit": "E8"}, {"raw": "Dasdarfnichtwahrsein. 这不是真的！（我不接受）", "unit": "E8"}, {"raw": "WasmeinenSiedazu? 您对此怎么看？", "unit": "E8"}, {"raw": "WasmeinenSiedamit? 您这话什么意思？", "unit": "E8"}, {"raw": "Dasistsehrnettvondir. 你真好。", "unit": "E8"}, {"raw": "WohinkommtderTisch? 桌子放哪儿?", "unit": "E8"}];
+const UNIT_INFO = [["E1", "Willkommen!", "欢迎！"], ["E2", "Wie geht's?", "你好吗？"], ["E3", "Das schmeckt!", "好吃！"], ["E4", "Sonst noch etwas?", "您还有什么需要吗？"], ["E5", "Von früh bis spät", "从早到晚"], ["E6", "Glücklich!", "开心！"], ["E7", "Immer was los!", "总有活动！"], ["E8", "Ich wohne gern hier!", "我喜欢住这儿！"], ["E9", "Wir sind eine Familie", "我们是一家人"], ["E10", "Aller Anfang ist schwer!", "万事开头难！"]];
+const VK="DeutschTrainingLab_VocabMemory_v1";
+let memory={items:[],pos:0,score:0,answered:false,shown:false,mode:"de2zh",unit:"E1",count:20};
+
+function vocabStore(){
+  try{return JSON.parse(localStorage.getItem(VK)||"{}")}catch(e){return {}}
+}
+function saveVocabStore(x){localStorage.setItem(VK,JSON.stringify(x))}
+function vocabKey(item){return item.unit+"|"+item.raw}
+function vocabParts(raw){
+  const m=raw.match(/^(.*?)(?=[\u4e00-\u9fff])/);
+  if(!m)return {de:raw.trim(),zh:""};
+  return {de:m[1].trim(),zh:raw.slice(m[1].length).trim()};
+}
+function populateVocabControls(){
+  const selects=["vocabUnit","memoryUnit"];
+  selects.forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.innerHTML='<option value="ALL">全部 E1–E8</option>'+UNIT_INFO.map(x=>`<option value="${x[0]}">${x[0]} ${x[1]}</option>`).join("");
+  });
+  document.getElementById("memoryUnit").value="E1";
+  renderUnitCards();renderVocabList();renderVocabProgress();resetMemory();
+}
+function renderUnitCards(){
+  const box=document.getElementById("unitCards");if(!box)return;
+  box.innerHTML=UNIT_INFO.map(x=>{
+    const n=FULL_VOCAB.filter(v=>v.unit===x[0]).length;
+    return `<div class="unit-mini" onclick="selectMemoryUnit('${x[0]}')"><b>${x[0]} · ${x[1]}</b><br><span class="muted">${x[2]} · ${n} 个已收录词条</span></div>`;
+  }).join("");
+}
+function selectMemoryUnit(u){
+  document.getElementById("memoryUnit").value=u;
+  document.getElementById("vocabUnit").value=u;
+  resetMemory();renderVocabList();
+}
+function renderVocabList(){
+  const unit=document.getElementById("vocabUnit")?.value||"ALL";
+  const q=(document.getElementById("vocabSearch")?.value||"").toLowerCase().trim();
+  const arr=FULL_VOCAB.filter(v=>(unit==="ALL"||v.unit===unit)&&(!q||v.raw.toLowerCase().includes(q)));
+  const box=document.getElementById("vocabList");if(!box)return;
+  box.innerHTML=arr.map(v=>{
+    const p=vocabParts(v.raw);
+    return `<div class="vocab-row"><div><b>${v.unit}</b></div><div><b>${escapeHtml(p.de)}</b></div><div class="vcn">${escapeHtml(p.zh)}</div></div>`;
+  }).join("") || "<p class='muted'>没有找到匹配词条。</p>";
+}
+function resetMemory(){
+  memory={items:[],pos:0,score:0,answered:false,shown:false,started:false,mode:document.getElementById("memoryMode")?.value||"de2zh",unit:document.getElementById("memoryUnit")?.value||"E1",count:parseInt(document.getElementById("memoryCount")?.value||20)};
+  const word=document.getElementById("memoryWord"),ans=document.getElementById("memoryAnswer"),opts=document.getElementById("memoryOptions");
+  if(word)word.textContent="点击上方“点击开始”开始随机测试";
+  if(ans){ans.textContent="";ans.classList.add("hidden")}
+  if(opts)opts.innerHTML="";
+  const stat=document.getElementById("memoryStat");if(stat)stat.textContent="请选择单元、题量和模式后开始。";
+}
+function startMemoryTest(){
+  const unit=document.getElementById("memoryUnit")?.value||"E1";
+  const mode=document.getElementById("memoryMode")?.value||"de2zh";
+  const count=parseInt(document.getElementById("memoryCount")?.value||20);
+  let pool=FULL_VOCAB.filter(v=>unit==="ALL"||v.unit===unit);
+  const st=vocabStore(), weighted=[];
+  pool.forEach(v=>{
+    const s=st[vocabKey(v)]||{right:0,wrong:0};
+    const w=Math.min(10,1+(s.wrong||0)*3+(s.right<2?2:0));
+    for(let i=0;i<w;i++)weighted.push(v);
+  });
+  weighted.sort(()=>Math.random()-.5);
+  const seen=new Set(),items=[];
+  for(const v of weighted){if(!seen.has(vocabKey(v))){seen.add(vocabKey(v));items.push(v)}}
+  items.sort(()=>Math.random()-.5);
+  memory={items:items.slice(0,Math.min(count,items.length)),pos:0,score:0,answered:false,shown:false,started:true,mode,unit,count};
+  showMemory();
+}
+function showMemory(){
+  const q=memory.items[memory.pos];
+  const label=document.getElementById("memoryModeLabel"),word=document.getElementById("memoryWord");
+  const ans=document.getElementById("memoryAnswer"),opts=document.getElementById("memoryOptions");
+  if(!q){
+    word.textContent="本轮完成 🎉";
+    ans.textContent=`得分：${memory.score} / ${memory.items.length}`;
+    ans.classList.remove("hidden");opts.innerHTML="";
+    document.getElementById("memoryStat").textContent="已完成本轮，可以重新点击“开始”生成一套新的随机题。";
+    return;
+  }
+  const p=vocabParts(q.raw);
+  memory.answered=false;memory.shown=false;
+  label.textContent=memory.mode==="de2zh"?"看德选中":"看中选德";
+  word.textContent=memory.mode==="de2zh"?p.de:p.zh;
+  ans.textContent=memory.mode==="de2zh"?p.zh:p.de;ans.classList.add("hidden");
+  const correct=memory.mode==="de2zh"?p.zh:p.de;
+  let candidates=FULL_VOCAB.filter(v=>v.unit===q.unit&&vocabKey(v)!==vocabKey(q)).sort(()=>Math.random()-.5);
+  const distractors=[],used=new Set([correct]);
+  for(const c of candidates){
+    const cp=vocabParts(c.raw),val=memory.mode==="de2zh"?cp.zh:cp.de;
+    if(val&&!used.has(val)){used.add(val);distractors.push(val)}
+    if(distractors.length>=3)break;
+  }
+  const choices=[correct,...distractors].sort(()=>Math.random()-.5);
+  opts.innerHTML=choices.map(c=>`<button class="option" onclick="memoryChoice(this,${JSON.stringify(c)})">${escapeHtml(c)}</button>`).join("");
+  document.getElementById("memoryStat").textContent=`第 ${memory.pos+1} / ${memory.items.length} 题 · 先选择答案，点击后立即显示正确/错误与答案`;
+}
+function showMemoryAnswer(){
+  if(!memory.started)return;
+  document.getElementById("memoryAnswer")?.classList.remove("hidden");memory.shown=true;
+}
+function memoryChoice(btn,val){
+  if(!memory.started||memory.answered)return;
+  const q=memory.items[memory.pos],p=vocabParts(q.raw),correct=memory.mode==="de2zh"?p.zh:p.de;
+  const ok=val===correct;memory.answered=true;
+  const st=vocabStore(),k=vocabKey(q);st[k]=st[k]||{right:0,wrong:0,last:0};
+  if(ok){st[k].right++;memory.score++;btn.classList.add("correct")}else{st[k].wrong++;btn.classList.add("wrong")}
+  st[k].last=Date.now();saveVocabStore(st);
+  document.querySelectorAll("#memoryOptions .option").forEach(b=>{if(b.textContent===correct)b.classList.add("correct")});
+  const ans=document.getElementById("memoryAnswer");
+  ans.textContent=(ok?"✓ 正确：":"✗ 错误，正确答案：")+correct;
+  ans.classList.remove("hidden");
+  document.getElementById("memoryStat").textContent=ok?"答对了！点击“认识 / 正确”进入下一题。":"已标记为错词，点击“认识 / 正确”或“不认识 / 错误”进入下一题。";
+}
+function nextMemory(ok){
+  if(!memory.started)return;
+  if(!memory.answered){
+    const q=memory.items[memory.pos],p=vocabParts(q.raw),correct=memory.mode==="de2zh"?p.zh:p.de;
+    memory.answered=true;
+    const st=vocabStore(),k=vocabKey(q);st[k]=st[k]||{right:0,wrong:0,last:0};
+    if(ok){st[k].right++;memory.score++}else st[k].wrong++;
+    st[k].last=Date.now();saveVocabStore(st);
+    const ans=document.getElementById("memoryAnswer");ans.textContent=(ok?"✓ 正确：":"✗ 错误，正确答案：")+correct;ans.classList.remove("hidden");
+  }
+  memory.pos++;showMemory();renderVocabProgress();
+}
+function renderVocabProgress(){
+  const box=document.getElementById("vocabProgress");if(!box)return;
+  const st=vocabStore();
+  const rows=UNIT_INFO.slice(0,8).map(x=>{
+    const arr=FULL_VOCAB.filter(v=>v.unit===x[0]);let known=0,attempt=0;
+    arr.forEach(v=>{const s=st[vocabKey(v)];if(s){attempt+=(s.right||0)+(s.wrong||0);if((s.right||0)>=2&&(s.right||0)>=(s.wrong||0)*2)known++}});
+    return `<div style="margin:9px 0"><b>${x[0]} ${x[1]}</b>　${known}/${arr.length} 掌握　<span class="muted">${attempt} 次记录</span></div>`;
+  }).join("");
+  box.innerHTML=rows;
+}
+
+function init(){
+ renderAll();nextFlash();
+}
+init();
+
+try{populateVocabControls();}catch(e){console.warn('词汇模块初始化失败',e)}
+</script>
+</body>
+</html>
