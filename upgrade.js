@@ -281,7 +281,13 @@ var V5mem={items:[],pos:0,score:0,answered:false,mode:"de2zh",unit:"ALL"};
 function V5wordsBuild(){
  var w=document.getElementById("words");if(!w)return;
  w.innerHTML='<div class="card"><div style="font-size:12px;letter-spacing:.14em;color:#7a867f;font-weight:700">VOCABULARY MEMORY · 词汇记背</div><h2>单词记背</h2><p class="muted">从已有 E1–E8 词库随机抽取，自动判断答案并记录每个词条的熟练程度。答完后必须点击“下一题”才会进入下一题。</p><div class="vocab-tools"><select id="v5mu"></select><select id="v5mm"><option value="de2zh">看德选中</option><option value="zh2de">看中选德</option></select><select id="v5mc"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></div><div class="v5memcard"><button id="v5mstart" type="button" class="primary">▶ 点击开始</button><div class="memory-mode" id="v5mlabel">尚未开始</div><div class="v5memword" id="v5mword">选择范围和题量后开始</div><div id="v5mopts" class="v5memopts"></div><div id="v5mfb"></div><button id="v5mnext" class="primary v5next" onclick="V5nextMem()">下一题 →</button><div class="memory-stat" id="v5mstat"></div></div></div><div class="card"><h3>词汇熟练度</h3><p class="muted">答题历史会自动形成词条熟练度。答错会降低熟练度并缩短复习间隔，连续答对会提高熟练度。</p><div id="v5vp"></div></div><div class="card"><div style="font-size:12px;letter-spacing:.14em;color:#7a867f;font-weight:700">QUICK TRANSLATOR · 快速翻译</div><h3>德语 ↔ 中文</h3><textarea id="v5ti" placeholder="输入德语单词、短语或句子"></textarea><div class="translator-actions"><select id="v5tp"><option value="auto">自动判断</option><option value="de|zh-CN">德语 → 中文</option><option value="zh-CN|de">中文 → 德语</option></select><button class="primary" onclick="V5translate()">翻译</button><button class="secondary" onclick="document.getElementById(\'v5ti\').value=\'\';document.getElementById(\'v5tr\').textContent=\'翻译结果会显示在这里。\'">清空</button></div><div id="v5tr" class="v5trans muted">翻译结果会显示在这里。</div><p><a href="https://translate.google.com/?sl=de&tl=zh-CN&op=translate" target="_blank" rel="noopener" style="color:#61776b">打开 Google 翻译 ↗</a></p></div>';
- var startBtn=document.getElementById("v5mstart");if(startBtn)startBtn.addEventListener("click",function(e){e.preventDefault();V5startMem()});var s=document.getElementById("v5mu");s.innerHTML='<option value="ALL">全部 E1–E8</option>'+Object.keys(V5UG).map(function(u){return '<option value="'+u+'">'+u+'</option>'}).join("");V5renderVP();
+ var startBtn=document.getElementById("v5mstart");
+ if(startBtn)startBtn.addEventListener("click",function(e){e.preventDefault();V5startMem()});
+ var nextBtn=document.getElementById("v5mnext");
+ if(nextBtn){
+  nextBtn.removeAttribute("onclick");
+  nextBtn.addEventListener("click",function(e){e.preventDefault();window.V5nextMem()});
+ }var s=document.getElementById("v5mu");s.innerHTML='<option value="ALL">全部 E1–E8</option>'+Object.keys(V5UG).map(function(u){return '<option value="'+u+'">'+u+'</option>'}).join("");V5renderVP();
 }
 function V5startMem(){
  try{
@@ -318,13 +324,23 @@ function V5showMem(){
  if(V5mem.pos>=V5mem.items.length){w.textContent="本轮完成 🎉";o.innerHTML="";fb.innerHTML='<div class="answer ok"><b>正确 '+V5mem.score+' / '+V5mem.items.length+'</b><br>本轮词条熟练度已全部记录。</div>';nx.classList.remove("show");document.getElementById("v5mstat").textContent="可以重新开始一轮随机练习。";V5renderVP();return}
  var q=V5mem.items[V5mem.pos],z=V5vp(q.raw),correct=V5mem.mode==="de2zh"?z.zh:z.de;V5mem.answered=false;
  document.getElementById("v5mlabel").textContent=V5mem.mode==="de2zh"?"看德选中":"看中选德";w.textContent=V5mem.mode==="de2zh"?z.de:z.zh;fb.innerHTML="";nx.classList.remove("show");
- var vals=[correct],seen={};seen[correct]=1;for(var a=V5shuffle(V5pool(V5mem.unit).filter(function(v){return V5key(v)!==V5key(q)})),i=0;i<a.length&&vals.length<4;i++){var x=V5vp(a[i].raw),v=V5mem.mode==="de2zh"?x.zh:x.de;if(v&&!seen[v]){seen[v]=1;vals.push(v)}}o.innerHTML=V5shuffle(vals).map(function(x){return '<button class="v5memopt" onclick=\'V5answerMem(this,'+JSON.stringify(x)+')\'>'+V5esc(x)+'</button>'}).join("");document.getElementById("v5mstat").textContent="第 "+(V5mem.pos+1)+" / "+V5mem.items.length+" 题 · 选择后立即判断";
+ var vals=[correct],seen={};seen[correct]=1;for(var a=V5shuffle(V5pool(V5mem.unit).filter(function(v){return V5key(v)!==V5key(q)})),i=0;i<a.length&&vals.length<4;i++){var x=V5vp(a[i].raw),v=V5mem.mode==="de2zh"?x.zh:x.de;if(v&&!seen[v]){seen[v]=1;vals.push(v)}}o.innerHTML="";
+ V5shuffle(vals).forEach(function(x){
+  var b=document.createElement("button");
+  b.type="button";b.className="v5memopt";b.textContent=x;
+  b.addEventListener("click",function(){window.V5answerMem(b,x)});
+  o.appendChild(b);
+ });
+ document.getElementById("v5mstat").textContent="第 "+(V5mem.pos+1)+" / "+V5mem.items.length+" 题 · 选择后立即判断";
 }
 window.V5answerMem=function(btn,val){
  if(V5mem.answered)return;var q=V5mem.items[V5mem.pos],z=V5vp(q.raw),correct=V5mem.mode==="de2zh"?z.zh:z.de,ok=val===correct;V5mem.answered=true;
  var st=V5store(),k=V5key(q),x=st[k]||{right:0,wrong:0,streak:0,mastery:0};if(ok){x.right++;x.streak=(x.streak||0)+1;x.mastery=Math.min(100,(x.mastery||0)+12+Math.min(x.streak,5)*2);V5mem.score++}else{x.wrong++;x.streak=0;x.mastery=Math.max(0,(x.mastery||0)-25)}x.last=Date.now();x.due=Date.now()+(ok?86400000*Math.min(Math.max(x.streak,1),14):600000);st[k]=x;V5save(st);
  document.querySelectorAll("#v5mopts .v5memopt").forEach(function(b){b.disabled=true;if(b.textContent===correct)b.classList.add("correct");if(b===btn&&!ok)b.classList.add("wrong")});
- fb.innerHTML='<div class="answer '+(ok?"ok":"bad")+'"><b>'+(ok?"✓ 正确":"✗ 错误")+'</b><br>'+(ok?"":"<b>正确答案：</b>"+V5esc(correct)+"<br>")+'<span class="small">本词条熟练度：'+x.mastery+'%</span></div>';nx.classList.add("show");nx.focus();V5renderVP();
+ fb.innerHTML='<div class="answer '+(ok?"ok":"bad")+'"><b>'+(ok?"✓ 正确":"✗ 错误")+'</b><br>'+(ok?"":"<b>正确答案：</b>"+V5esc(correct)+"<br>")+'<span class="small">本词条熟练度：'+x.mastery+'%</span></div>';nx.classList.add("show");
+ nx.disabled=false;
+ nx.focus();
+ V5renderVP();
 };
 window.V5nextMem=function(){if(!V5mem.answered)return;V5mem.pos++;V5showMem()};
 function V5renderVP(){
