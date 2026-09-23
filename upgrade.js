@@ -61,3 +61,259 @@ function clearTranslator(){document.getElementById("translatorInput").value="";d
 function renderVP(){var b=document.getElementById("vocabProgress");if(!b)return;var st=vs();b.innerHTML=UNIT_INFO.slice(0,8).map(function(u){var a=FULL_VOCAB.filter(function(v){return v.unit===u[0]}),avg=a.length?Math.round(a.reduce(function(t,v){return t+mastery(st[vk(v)])},0)/a.length):0;return'<div class="skillrow"><b>'+u[0]+' · '+u[1]+'</b><br><span class="muted">平均掌握度 '+avg+'%</span><div class="scorebar" style="margin-top:7px"><i style="width:'+avg+'%"></i></div></div>'}).join("")}
 initDynamic();renderVP();
 })();
+
+
+/* ================= V5 PATCH ================= */
+(function(){
+"use strict";
+function V5esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]})}
+function V5shuffle(a){return a.slice().sort(function(){return Math.random()-.5})}
+function V5vp(raw){var s=String(raw||""),m=s.match(/^(.*?)(?=[\u4e00-\u9fff])/);return m?{de:m[1].trim(),zh:s.slice(m[1].length).trim()}:{de:s.trim(),zh:""}}
+function V5allV(){return window.FULL_VOCAB||window.VOCAB||[]}
+function V5pool(u){return V5allV().filter(function(v){var z=V5vp(v.raw);return (u==="ALL"||v.unit===u)&&z.de&&z.zh})}
+function V5key(v){return (v.unit||"")+"\u0001"+(v.raw||"")}
+function V5store(){try{return JSON.parse(localStorage.getItem("DeutschTrainingLab_VocabMemory_v1")||"{}")}catch(e){return {}}}
+function V5save(x){localStorage.setItem("DeutschTrainingLab_VocabMemory_v1",JSON.stringify(x))}
+function V5master(x){if(!x)return 0;var n=(x.right||0)+(x.wrong||0);if(!n)return 0;return Math.max(0,Math.min(100,Math.round((x.right||0)/n*70+Math.min(x.streak||0,5)*6)))}
+
+var V5UG={
+ E1:["人称代词第一格","规则动词现在时变位","sein 现在时变位","（不）定冠词第一格","句子类型与基本语序"],
+ E2:["kein- 第一格","不规则动词现在时变位","物主冠词第一格"],
+ E3:["es gibt + Akkusativ","第三格人称代词","helfen / schmecken 等第三格动词","强变化动词现在时"],
+ E4:["第四格基础使用","数量与量词表达","kein / nichts 否定"],
+ E5:["可分动词现在时","时间表达","地点与方向表达","in / an / auf / nach / zu / von / aus"],
+ E6:["第三格动词","固定介词与格","nicht ..., sondern ...","nicht nur ..., sondern auch ...","zwar ..., aber ..."],
+ E7:["Perfekt 基本结构","haben / sein 的选择","规则与不规则 Partizip II","-ieren 不加 ge-","可分/不可分前缀","sein / haben 的 Präteritum"],
+ E8:["Wo / Wohin","Wechselpräpositionen 的 Dativ / Akkusativ","nach Hause / zu Hause","sorgen für / führen zu / überzeugen von / überreden zu","地点与问路表达"]
+};
+var V5GB={
+ E1:[
+  ["Ich ___ Deutsch.","lerne",["lernt","lernen","lernst"],"规则动词现在时"],
+  ["Wir ___ Studenten.","sind",["seid","ist","bin"],"sein 现在时"],
+  ["___ bin Studentin.","Ich",["Mich","Mir","Mein"],"人称代词第一格"],
+  ["Das ist ___ Student.","ein",["eine","einen","einer"],"不定冠词第一格"]
+ ],
+ E2:[
+  ["Das ist ___ Problem.","kein",["keine","keinen","nicht"],"kein- 第一格"],
+  ["Er ___ gern Bücher.","liest",["lese","lesen","liest"],"不规则动词现在时"],
+  ["Das ist ___ Buch. (ich)","mein",["meine","meinen","meiner"],"物主冠词第一格"],
+  ["Du ___ gern Musik.","hörst",["hört","höre","hören"],"现在时变位"]
+ ],
+ E3:[
+  ["In der Stadt gibt es ___ Bibliothek.","eine",["ein","einer","einen"],"es gibt + Akkusativ"],
+  ["Ich helfe ___. (du)","dir",["dich","du","dein"],"第三格人称代词"],
+  ["Das Essen schmeckt ___. (ich)","mir",["mich","mein","ich"],"schmecken + Dativ"],
+  ["Er ___ zu Mittag. (essen)","isst",["esse","esst","essen"],"强变化动词"]
+ ],
+ E4:[
+  ["Ich probiere ___ Apfel.","den",["der","dem","des"],"第四格基础使用"],
+  ["eine ___ Milch","Packung",["Stück","Flasche","Tüte"],"数量与量词"],
+  ["Ich brauche ___.","nichts",["kein","keine","nicht"],"nichts 否定"],
+  ["Ich kaufe ___ Schokolade.","eine Tafel",["ein Bund","ein Netz","ein Beutel"],"数量表达"]
+ ],
+ E5:[
+  ["Ich ___ früh ___. (aufstehen)","stehe / auf",["aufstehe / stehe","stehe / an","auf / stehe"],"可分动词"],
+  ["Wir treffen uns ___ 8 Uhr.","um",["am","in","nach"],"时间表达"],
+  ["Ich komme ___ China.","aus",["von","nach","zu"],"地点/来源"],
+  ["Ich gehe ___ Bibliothek.","in die",["in der","auf dem","von der"],"方向表达"]
+ ],
+ E6:[
+  ["Das Buch gehört ___. (ich)","mir",["mich","mein","ich"],"第三格动词"],
+  ["Ich habe Angst ___ etwas.","vor",["für","auf","mit"],"固定介词"],
+  ["Er trinkt nicht Kaffee, ___ Tee.","sondern",["aber","oder","und"],"nicht ..., sondern ..."],
+  ["Sie ist zwar müde, ___ sie arbeitet weiter.","aber",["sondern","und","oder"],"zwar ..., aber ..."],
+  ["Ich danke ___. (du)","dir",["dich","du","dein"],"danken + Dativ"]
+ ],
+ E7:[
+  ["Ich ___ Deutsch ___. (lernen)","habe / gelernt",["bin / gelernt","habe / lernen","bin / lernen"],"Perfekt"],
+  ["Wir ___ nach Berlin gefahren.","sind",["haben","waren","hatten"],"Perfekt 助动词"],
+  ["studieren →","studiert",["gestudiert","studieren","studierte"],"-ieren"],
+  ["besuchen →","besucht",["gebesucht","besuchen","besuchte"],"不可分前缀"],
+  ["einladen →","eingeladen",["geeinladen","einladet","eingeladet"],"可分动词"],
+  ["lesen →","gelesen",["gelest","gelesert","lesen"],"强变化"],
+  ["sein 的 ich-Präteritum：","war",["bin","hatte","wurde"],"Präteritum"],
+  ["haben 的 ich-Präteritum：","hatte",["habe","war","wurde"],"Präteritum"]
+ ],
+ E8:[
+  ["Ich stelle das Buch ___ Tisch.","auf den",["auf dem","an der","in der"],"Wohin + Akkusativ"],
+  ["Das Buch liegt ___ Tisch.","auf dem",["auf den","in den","an die"],"Wo + Dativ"],
+  ["Ich gehe ___ Hause.","nach",["zu","in","an"],"nach Hause"],
+  ["Ich bin ___ Hause.","zu",["nach","in","an"],"zu Hause"],
+  ["Das führt ___ Problemen.","zu",["für","von","auf"],"führen zu + Dativ"],
+  ["Er überzeugt mich ___ seiner Idee.","von",["zu","für","mit"],"überzeugen von"],
+  ["Pflanzen sorgen ___ gute Luft.","für",["vor","von","zu"],"sorgen für"]
+ ]
+};
+
+function V5style(){
+ if(document.getElementById("v5-style"))return;
+ var s=document.createElement("style");s.id="v5-style";s.textContent=
+ ":root{--vbg:#e9ece8;--vcard:#fafbf8;--vink:#303a35;--vmuted:#707a74;--vline:#d0d7d1;--vacc:#667c71;--vsoft:#dfe6e1;--vbad:#9a706c;--vshadow:0 14px 38px rgba(55,67,60,.08)}"+
+ "body{background:radial-gradient(circle at 8% 0%,rgba(180,190,184,.18),transparent 34%),radial-gradient(circle at 95% 15%,rgba(188,184,198,.14),transparent 32%),var(--vbg)!important;color:var(--vink)!important;font-family:Inter,'Noto Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif!important;letter-spacing:.01em}"+
+ "header{background:linear-gradient(135deg,#5d7067,#7f8784 55%,#888492)!important;padding:34px 18px 30px!important;box-shadow:0 12px 32px rgba(54,63,58,.12)}"+
+ "nav{background:rgba(246,248,244,.90)!important;border-bottom:1px solid rgba(150,160,153,.34)!important;box-shadow:0 8px 24px rgba(55,65,59,.05)}"+
+ ".tab{padding:10px 15px;border-radius:13px;color:#5d6862!important;transition:.18s ease}.tab:hover{background:#e8ede8;transform:translateY(-1px)}.tab.active{background:#d9e2dc!important;color:#3f544a!important;box-shadow:inset 0 0 0 1px rgba(88,109,98,.08)}"+
+ ".card{background:rgba(250,251,248,.94)!important;border:1px solid rgba(180,190,183,.58)!important;border-radius:22px!important;box-shadow:var(--vshadow)!important}"+
+ ".primary,.secondary,.dangerbtn{border-radius:13px!important;min-height:44px;padding:10px 17px!important;transition:transform .16s ease,box-shadow .16s ease}.primary{background:#667c71!important;box-shadow:0 7px 18px rgba(70,88,79,.16)}.primary:hover,.secondary:hover{transform:translateY(-1px)}.primary:active,.secondary:active,.option:active,.v5memopt:active{transform:scale(.98)}"+
+ ".secondary{background:#e4e9e4!important;color:#405047!important;border:1px solid #d0d8d1!important}.dangerbtn{background:#eee1df!important;color:#76514e!important}"+
+ "select,input,textarea{border-radius:13px!important;border-color:#cbd3cc!important;background:#fbfcfa!important}"+
+ ".option{border-radius:15px!important;background:#f8faf7!important;border-color:#d1d8d2!important;padding:14px 16px!important;transition:.16s ease}.option:hover{background:#eef3ee!important;border-color:#87988f!important;transform:translateY(-1px)}"+
+ ".option.correct{background:#dce9df!important;border-color:#678473!important}.option.wrong{background:#eee0de!important;border-color:#a47772!important}"+
+ ".answer{border-radius:15px!important;background:#f0f4f0!important;border-left:4px solid #667c71!important}.answer.bad{background:#f3e9e7!important;border-left-color:#9a706c!important}.answer.ok{background:#e8f0ea!important;border-left-color:#5d7c69!important}"+
+ ".practice-config{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.practice-config label{display:block;color:#6e7972;font-size:13px;margin-bottom:5px}.grammar-summary{padding:15px 16px;border-radius:17px;background:#e9eee9;border:1px solid #d0d9d2;margin:15px 0}.grammar-chip{display:inline-block;margin:4px 5px 4px 0;padding:6px 10px;border-radius:99px;background:#f7faf6;border:1px solid #d2dbd3;font-size:13px}"+
+ ".v5stage{margin-top:18px}.v5stageq{font-size:26px;font-weight:730;line-height:1.45;margin:16px 0 22px}.v5progress{height:7px;background:#e1e6e1;border-radius:99px;overflow:hidden;margin:12px 0 20px}.v5progress i{display:block;height:100%;background:#748b80;width:0;transition:width .25s ease}.v5actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}"+
+ ".v5memcard{max-width:760px;margin:18px auto;padding:28px;border:1px solid #cbd4cd;border-radius:22px;background:linear-gradient(145deg,#fbfcf9,#edf2ed);text-align:center;box-shadow:0 16px 36px rgba(54,68,60,.09)}.v5memword{font-size:30px;font-weight:760;min-height:55px}.v5memopts{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px}.v5memopt{border:1px solid #cfd7d0;background:#f9fbf8;border-radius:15px;padding:14px 17px;cursor:pointer;transition:.16s ease;min-width:180px}.v5memopt:hover{background:#eaf0eb;border-color:#82958a;transform:translateY(-1px)}.v5memopt.correct{background:#dce9df;border-color:#668271}.v5memopt.wrong{background:#eee0de;border-color:#a47772}.v5next{display:none;margin-top:16px}.v5next.show{display:inline-flex}"+
+ ".v5homegrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.v5homeitem{padding:20px;border-radius:18px;background:#f1f4f0;border:1px solid #d6ddd7;text-align:center}.v5homeitem span{font-size:13px;color:#707a74}.v5homeitem b{display:block;font-size:30px;margin-top:3px}.v5trans{min-height:90px;margin-top:12px;padding:15px;border-radius:15px;background:#f0f4f0;border:1px solid #d0d8d1;white-space:pre-wrap}@media(max-width:720px){.practice-config,.v5homegrid{grid-template-columns:1fr 1fr}.v5stageq{font-size:23px}}@media(max-width:500px){.practice-config,.v5homegrid{grid-template-columns:1fr}.v5memopt{width:100%}}";
+ document.head.appendChild(s);
+}
+
+function V5home(){
+ var h=document.getElementById("home");if(!h)return;
+ h.innerHTML='<div class="card"><div style="font-size:12px;letter-spacing:.14em;color:#7a867f;font-weight:700">YOUR GERMAN TRAINING ROOM</div><h2>学习记录</h2><p class="muted">这里仅保留你的长期学习数据。具体练习分别放在「学习中心」和「智能练习」中。</p><div class="v5homegrid"><div class="v5homeitem"><span>累计答题</span><b id="v5-total">0</b></div><div class="v5homeitem"><span>正确率</span><b id="v5-rate">—</b></div><div class="v5homeitem"><span>错题</span><b id="v5-wrong">0</b></div><div class="v5homeitem"><span>待复习</span><b id="v5-due">0</b></div></div></div>';
+}
+function V5stats(){
+ var t=state.total||0,r=t?Math.round((state.correct||0)/t*100)+"%":"—",w=state.wrong||0,d=Object.values(state.schedule||{}).filter(function(x){return x.next&&x.next<=Date.now()}).length;
+ [["v5-total",t],["v5-rate",r],["v5-wrong",w],["v5-due",d]].forEach(function(x){var e=document.getElementById(x[0]);if(e)e.textContent=x[1]});
+}
+
+function V5topics(){
+ var u=document.getElementById("v5lu")?document.getElementById("v5lu").value:"ALL",box=document.getElementById("v5topics");if(!box)return;
+ var us=u==="ALL"?Object.keys(V5UG):[u],a=[];us.forEach(function(x){a=a.concat(V5UG[x]||[])});
+ box.innerHTML="<b>固定知识点：</b> "+a.map(function(x){return "<span class='grammar-chip'>"+V5esc(x)+"</span>"}).join("");
+}
+function V5grammarQ(u){
+ var a=V5GB[u]||[];if(!a.length)return null;
+ var x=a[Math.floor(Math.random()*a.length)];
+ return {unit:u,skill:u+"-"+x[3],category:"语法",q:x[0],opts:V5shuffle([x[1]].concat(x[2])),correct:x[1],explanation:"本题围绕 "+u+" 的固定知识点「"+x[3]+"」生成。"};
+}
+function V5vocabQ(u){
+ var p=V5pool(u);if(!p.length)return null;
+ var q=p[Math.floor(Math.random()*p.length)],z=V5vp(q.raw),de=Math.random()<.5,correct=de?z.zh:z.de,vals=[correct],seen={};seen[correct]=1;
+ for(var i=0,arr=V5shuffle(p);i<arr.length&&vals.length<4;i++){var x=V5vp(arr[i].raw),v=de?x.zh:x.de;if(v&&!seen[v]){seen[v]=1;vals.push(v)}}
+ if(vals.length<4)return null;
+ return {unit:q.unit,skill:q.unit+"-词汇-"+(de?"德中":"中德"),category:"词汇",q:de?"“"+z.de+"”的意思是：":"“"+z.zh+"”对应的德语是：",opts:V5shuffle(vals),correct:correct,explanation:"词条来自你提供的 "+q.unit+" 词库："+z.de+" = "+z.zh+"。"};
+}
+function V5make(unit,n,mode){
+ var us=unit==="ALL"?Object.keys(V5UG):[unit],out=[],seen={},weak=Object.entries(state.skills||{}).sort(function(a,b){return (b[1].wrong||0)-(a[1].wrong||0)}).map(function(x){return x[0]});
+ for(var guard=0;out.length<n&&guard<n*50;guard++){
+  var u=us[Math.floor(Math.random()*us.length)],q=null;
+  if(mode==="vocab")q=V5vocabQ(u);
+  else if(mode==="grammar")q=V5grammarQ(u);
+  else if(mode==="weak"){
+   var wk=weak.find(function(k){return k.indexOf(u+"-")===0});
+   q=wk&&wk.indexOf("词汇")>=0?V5vocabQ(u):V5grammarQ(u);
+   if(!wk&&Math.random()<.4)q=V5vocabQ(u);
+  }else q=Math.random()<.55?V5grammarQ(u):V5vocabQ(u);
+  if(q){var k=q.skill+"|"+q.q;if(!seen[k]){seen[k]=1;out.push(q)}}
+ }
+ return out;
+}
+function V5record(q,ok,user){
+ state.total=(state.total||0)+1;state.correct=(state.correct||0)+(ok?1:0);state.wrong=(state.wrong||0)+(ok?0:1);state.skills=state.skills||{};
+ var s=state.skills[q.skill]||{right:0,wrong:0,streak:0};if(ok){s.right++;s.streak=(s.streak||0)+1}else{s.wrong++;s.streak=0};state.skills[q.skill]=s;
+ state.schedule=state.schedule||{};var o=state.schedule[q.skill]||{box:0,next:0};o.box=ok?Math.min((o.box||0)+1,5):0;
+ var ints=[0,6e5,864e5,2592e5,6048e5,12096e5];o.next=Date.now()+(ok?ints[o.box]:6e5);state.schedule[q.skill]=o;
+ if(!ok){state.mistakes=state.mistakes||[];state.mistakes.unshift({time:new Date().toISOString(),unit:q.unit,skill:q.skill,q:q.q,correct:q.correct,user:user||"",explanation:q.explanation,generated:true});state.mistakes=state.mistakes.slice(0,200)}
+ localStorage.setItem(KEY,JSON.stringify(state));V5stats();
+}
+
+var V5learn={items:[],pos:0,correct:0,answered:false,current:null};
+function V5learnBuild(){
+ var el=document.getElementById("learn");if(!el)return;
+ el.innerHTML='<div class="card"><div style="font-size:12px;letter-spacing:.14em;color:#7a867f;font-weight:700">LEARNING CENTER · 动态出题</div><h2>按单元生成练习</h2><p class="muted">不使用每单元固定题库。系统依据本单元固定语法知识点＋你提供的词库，实时组合本轮题目。</p><div class="practice-config"><div><label>练习单元</label><select id="v5lu"></select></div><div><label>题量</label><select id="v5lc"><option>5</option><option selected>10</option><option>15</option><option>20</option><option>30</option></select></div><div><label>题型重点</label><select id="v5lm"><option value="mixed">混合：语法＋词汇</option><option value="grammar">语法为主</option><option value="vocab">词汇为主</option><option value="weak">优先薄弱点</option></select></div></div><div id="v5topics" class="grammar-summary"></div><button class="primary" onclick="V5startLearn()">开始本轮练习</button></div><div id="v5learnstage" class="card v5stage"><div class="muted">请先设置单元、题量和题型，然后点击「开始本轮练习」。</div></div>';
+ var s=document.getElementById("v5lu");s.innerHTML='<option value="ALL">E1–E8 综合</option>'+Object.keys(V5UG).map(function(u){return '<option value="'+u+'">'+u+'</option>'}).join("");s.onchange=V5topics;V5topics();
+}
+function V5renderLearn(){
+ var root=document.getElementById("v5learnstage");if(!root)return;
+ if(V5learn.pos>=V5learn.items.length){root.innerHTML='<div class="answer ok"><b>本轮完成 🎉</b><br>正确 '+V5learn.correct+' / '+V5learn.items.length+'<br><span class="muted">已自动记录知识点表现与复习计划。</span></div><button class="primary" onclick="V5startLearn()" style="margin-top:14px">再来一轮</button>';return}
+ var q=V5learn.items[V5learn.pos];V5learn.current=q;V5learn.answered=false;
+ root.innerHTML='<div class="qhead"><div><span class="tag">'+V5esc(q.category)+' · 自动生成</span><div class="v5stageq">'+V5esc(q.q)+'</div></div><div class="muted">'+(V5learn.pos+1)+' / '+V5learn.items.length+'</div></div><div class="v5progress"><i style="width:'+(V5learn.pos/V5learn.items.length*100)+'%"></i></div><div id="v5learnopts">'+q.opts.map(function(o,i){return '<button class="option" onclick="V5answerLearn('+i+')">'+V5esc(o)+'</button>'}).join("")+'</div><div id="v5learnfb"></div><div class="v5actions"><button id="v5learnnext" class="primary" disabled onclick="V5nextLearn()">下一题 →</button></div>';
+}
+window.V5startLearn=function(){var u=document.getElementById("v5lu").value,n=+document.getElementById("v5lc").value,m=document.getElementById("v5lm").value,it=V5make(u,n,m);if(!it.length){alert("当前范围暂时没有足够可生成的材料。请先补充该单元词库。");return}V5learn={items:it,pos:0,correct:0,answered:false,current:null};V5renderLearn()};
+window.V5answerLearn=function(i){if(V5learn.answered)return;var q=V5learn.current,ok=q.opts[i]===q.correct;V5learn.answered=true;if(ok)V5learn.correct++;V5record(q,ok,q.opts[i]);document.querySelectorAll("#v5learnopts .option").forEach(function(b,j){b.disabled=true;if(q.opts[j]===q.correct)b.classList.add("correct");if(j===i&&!ok)b.classList.add("wrong")});document.getElementById("v5learnfb").innerHTML='<div class="answer '+(ok?"ok":"bad")+'"><b>'+(ok?"✓ 正确":"✗ 错误")+'</b>'+(ok?"":"<br><b>正确答案：</b>"+V5esc(q.correct))+'<br><span class="small">'+V5esc(q.explanation)+'</span></div>';document.getElementById("v5learnnext").disabled=false};
+window.V5nextLearn=function(){if(!V5learn.answered)return;V5learn.pos++;V5renderLearn()};
+
+var V5smart={items:[],pos:0,correct:0,answered:false,current:null};
+function V5smartBuild(){
+ var el=document.getElementById("quiz");if(!el)return;
+ el.innerHTML='<div class="card"><div style="font-size:12px;letter-spacing:.14em;color:#7a867f;font-weight:700">ADAPTIVE PRACTICE · 智能练习</div><h2>智能练习</h2><p class="muted">每日智能十题与薄弱点强化都集中在这里。系统会依据你的答题记录动态调整知识点权重。</p><div class="practice-config"><div><label>模式</label><select id="v5smode"><option value="daily">每日智能 10 题</option><option value="weak">根据薄弱点生成</option><option value="mixed">全范围自适应</option></select></div><div><label>题量</label><select id="v5scount"><option selected>10</option><option>15</option><option>20</option><option>30</option></select></div><div><label>范围</label><select id="v5sunit"><option value="ALL">E1–E8 全部</option>'+Object.keys(V5UG).map(function(u){return '<option value="'+u+'">'+u+'</option>'}).join("")+'</select></div></div><button class="primary" onclick="V5startSmart()">开始智能练习</button><button class="secondary" onclick="V5startSmart(\'weak\')" style="margin-left:7px">直接强化薄弱点</button></div><div id="v5smartstage" class="card v5stage"><div class="muted">选择模式后开始。这里不会跳到其他板块。</div></div>';
+}
+function V5renderSmart(){
+ var root=document.getElementById("v5smartstage");if(!root)return;
+ if(V5smart.pos>=V5smart.items.length){root.innerHTML='<div class="answer ok"><b>本轮完成 🎉</b><br>正确 '+V5smart.correct+' / '+V5smart.items.length+'<br><span class="muted">系统已根据本轮结果更新薄弱点和间隔复习。</span></div><button class="primary" onclick="V5startSmart()" style="margin-top:14px">再来一轮</button>';return}
+ var q=V5smart.items[V5smart.pos];V5smart.current=q;V5smart.answered=false;
+ root.innerHTML='<div class="qhead"><div><span class="tag">'+V5esc(q.category)+' · 智能生成</span><div class="v5stageq">'+V5esc(q.q)+'</div></div><div class="muted">'+(V5smart.pos+1)+' / '+V5smart.items.length+'</div></div><div class="v5progress"><i style="width:'+(V5smart.pos/V5smart.items.length*100)+'%"></i></div><div id="v5smartopts">'+q.opts.map(function(o,i){return '<button class="option" onclick="V5answerSmart('+i+')">'+V5esc(o)+'</button>'}).join("")+'</div><div id="v5smartfb"></div><div class="v5actions"><button id="v5smartnext" class="primary" disabled onclick="V5nextSmart()">下一题 →</button></div>';
+}
+window.V5startSmart=function(force){var mode=force||document.getElementById("v5smode")?.value||"daily",n=+(document.getElementById("v5scount")?.value||10),u=document.getElementById("v5sunit")?.value||"ALL";var m=mode==="weak"?"weak":mode==="daily"?"mixed":mode;var it=V5make(u,n,m);if(!it.length){alert("目前没有足够的可生成材料。请先补充词库或完成一些练习。");return}V5smart={items:it,pos:0,correct:0,answered:false,current:null};V5renderSmart()};
+window.V5answerSmart=function(i){if(V5smart.answered)return;var q=V5smart.current,ok=q.opts[i]===q.correct;V5smart.answered=true;if(ok)V5smart.correct++;V5record(q,ok,q.opts[i]);document.querySelectorAll("#v5smartopts .option").forEach(function(b,j){b.disabled=true;if(q.opts[j]===q.correct)b.classList.add("correct");if(j===i&&!ok)b.classList.add("wrong")});document.getElementById("v5smartfb").innerHTML='<div class="answer '+(ok?"ok":"bad")+'"><b>'+(ok?"✓ 正确":"✗ 错误")+'</b>'+(ok?"":"<br><b>正确答案：</b>"+V5esc(q.correct))+'<br><span class="small">'+V5esc(q.explanation)+'</span></div>';document.getElementById("v5smartnext").disabled=false};
+window.V5nextSmart=function(){if(!V5smart.answered)return;V5smart.pos++;V5renderSmart()};
+
+var V5mem={items:[],pos:0,score:0,answered:false,mode:"de2zh",unit:"ALL"};
+function V5wordsBuild(){
+ var w=document.getElementById("words");if(!w)return;
+ w.innerHTML='<div class="card"><div style="font-size:12px;letter-spacing:.14em;color:#7a867f;font-weight:700">VOCABULARY MEMORY · 词汇记背</div><h2>单词记背</h2><p class="muted">从已有 E1–E8 词库随机抽取，自动判断答案并记录每个词条的熟练程度。答完后必须点击“下一题”才会进入下一题。</p><div class="vocab-tools"><select id="v5mu"></select><select id="v5mm"><option value="de2zh">看德选中</option><option value="zh2de">看中选德</option></select><select id="v5mc"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></div><div class="v5memcard"><button class="primary" onclick="V5startMem()">▶ 点击开始</button><div class="memory-mode" id="v5mlabel">尚未开始</div><div class="v5memword" id="v5mword">选择范围和题量后开始</div><div id="v5mopts" class="v5memopts"></div><div id="v5mfb"></div><button id="v5mnext" class="primary v5next" onclick="V5nextMem()">下一题 →</button><div class="memory-stat" id="v5mstat"></div></div></div><div class="card"><h3>词汇熟练度</h3><p class="muted">答题历史会自动形成词条熟练度。答错会降低熟练度并缩短复习间隔，连续答对会提高熟练度。</p><div id="v5vp"></div></div><div class="card"><div style="font-size:12px;letter-spacing:.14em;color:#7a867f;font-weight:700">QUICK TRANSLATOR · 快速翻译</div><h3>德语 ↔ 中文</h3><textarea id="v5ti" placeholder="输入德语单词、短语或句子"></textarea><div class="translator-actions"><select id="v5tp"><option value="auto">自动判断</option><option value="de|zh-CN">德语 → 中文</option><option value="zh-CN|de">中文 → 德语</option></select><button class="primary" onclick="V5translate()">翻译</button><button class="secondary" onclick="document.getElementById(\'v5ti\').value=\'\';document.getElementById(\'v5tr\').textContent=\'翻译结果会显示在这里。\'">清空</button></div><div id="v5tr" class="v5trans muted">翻译结果会显示在这里。</div><p><a href="https://translate.google.com/?sl=de&tl=zh-CN&op=translate" target="_blank" rel="noopener" style="color:#61776b">打开 Google 翻译 ↗</a></p></div>';
+ var s=document.getElementById("v5mu");s.innerHTML='<option value="ALL">全部 E1–E8</option>'+Object.keys(V5UG).map(function(u){return '<option value="'+u+'">'+u+'</option>'}).join("");V5renderVP();
+}
+function V5startMem(){
+ V5mem.mode=document.getElementById("v5mm").value;V5mem.unit=document.getElementById("v5mu").value;
+ var n=+document.getElementById("v5mc").value,p=V5pool(V5mem.unit);if(!p.length){alert("当前范围没有可用词条。");return}
+ var st=V5store(),weighted=[];p.forEach(function(v){var x=st[V5key(v)]||{};var w=Math.min(10,1+(x.wrong||0)*3+(x.streak<2?2:0));for(var i=0;i<w;i++)weighted.push(v)});
+ var out=[],seen={};for(var a=V5shuffle(weighted),i=0;i<a.length&&out.length<Math.min(n,p.length);i++){var k=V5key(a[i]);if(!seen[k]){seen[k]=1;out.push(a[i])}}
+ V5mem={items:out,pos:0,score:0,answered:false,mode:V5mem.mode,unit:V5mem.unit};V5showMem();
+}
+function V5showMem(){
+ var w=document.getElementById("v5mword"),o=document.getElementById("v5mopts"),fb=document.getElementById("v5mfb"),nx=document.getElementById("v5mnext");
+ if(V5mem.pos>=V5mem.items.length){w.textContent="本轮完成 🎉";o.innerHTML="";fb.innerHTML='<div class="answer ok"><b>正确 '+V5mem.score+' / '+V5mem.items.length+'</b><br>本轮词条熟练度已全部记录。</div>';nx.classList.remove("show");document.getElementById("v5mstat").textContent="可以重新开始一轮随机练习。";V5renderVP();return}
+ var q=V5mem.items[V5mem.pos],z=V5vp(q.raw),correct=V5mem.mode==="de2zh"?z.zh:z.de;V5mem.answered=false;
+ document.getElementById("v5mlabel").textContent=V5mem.mode==="de2zh"?"看德选中":"看中选德";w.textContent=V5mem.mode==="de2zh"?z.de:z.zh;fb.innerHTML="";nx.classList.remove("show");
+ var vals=[correct],seen={};seen[correct]=1;for(var a=V5shuffle(V5pool(V5mem.unit).filter(function(v){return V5key(v)!==V5key(q)})),i=0;i<a.length&&vals.length<4;i++){var x=V5vp(a[i].raw),v=V5mem.mode==="de2zh"?x.zh:x.de;if(v&&!seen[v]){seen[v]=1;vals.push(v)}}o.innerHTML=V5shuffle(vals).map(function(x){return '<button class="v5memopt" onclick=\'V5answerMem(this,'+JSON.stringify(x)+')\'>'+V5esc(x)+'</button>'}).join("");document.getElementById("v5mstat").textContent="第 "+(V5mem.pos+1)+" / "+V5mem.items.length+" 题 · 选择后立即判断";
+}
+window.V5answerMem=function(btn,val){
+ if(V5mem.answered)return;var q=V5mem.items[V5mem.pos],z=V5vp(q.raw),correct=V5mem.mode==="de2zh"?z.zh:z.de,ok=val===correct;V5mem.answered=true;
+ var st=V5store(),k=V5key(q),x=st[k]||{right:0,wrong:0,streak:0,mastery:0};if(ok){x.right++;x.streak=(x.streak||0)+1;x.mastery=Math.min(100,(x.mastery||0)+12+Math.min(x.streak,5)*2);V5mem.score++}else{x.wrong++;x.streak=0;x.mastery=Math.max(0,(x.mastery||0)-25)}x.last=Date.now();x.due=Date.now()+(ok?86400000*Math.min(Math.max(x.streak,1),14):600000);st[k]=x;V5save(st);
+ document.querySelectorAll("#v5mopts .v5memopt").forEach(function(b){b.disabled=true;if(b.textContent===correct)b.classList.add("correct");if(b===btn&&!ok)b.classList.add("wrong")});
+ fb.innerHTML='<div class="answer '+(ok?"ok":"bad")+'"><b>'+(ok?"✓ 正确":"✗ 错误")+'</b><br>'+(ok?"":"<b>正确答案：</b>"+V5esc(correct)+"<br>")+'<span class="small">本词条熟练度：'+x.mastery+'%</span></div>';nx.classList.add("show");nx.focus();V5renderVP();
+};
+window.V5nextMem=function(){if(!V5mem.answered)return;V5mem.pos++;V5showMem()};
+function V5renderVP(){
+ var b=document.getElementById("v5vp");if(!b)return;var st=V5store(),all=V5allV();
+ b.innerHTML=Object.keys(V5UG).map(function(u){var a=all.filter(function(v){return v.unit===u}),avg=a.length?Math.round(a.reduce(function(t,v){return t+V5master(st[V5key(v)])},0)/a.length):0;return '<div class="skillrow"><b>'+u+'</b><br><span class="muted small">平均熟练度 '+avg+'% · '+a.length+' 条词条</span><div class="scorebar" style="margin-top:7px"><i style="width:'+avg+'%"></i></div></div>'}).join("");
+}
+window.V5translate=function(){
+ var inp=document.getElementById("v5ti"),out=document.getElementById("v5tr");if(!inp||!out||!inp.value.trim())return;var p=document.getElementById("v5tp").value;if(p==="auto")p=/[\u4e00-\u9fff]/.test(inp.value)?"zh-CN|de":"de|zh-CN";out.textContent="翻译中…";fetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(inp.value.trim())+"&langpair="+encodeURIComponent(p)).then(function(r){return r.json()}).then(function(d){out.textContent=d&&d.responseData&&d.responseData.translatedText?d.responseData.translatedText:"未获得翻译结果"}).catch(function(){out.textContent="在线翻译暂时不可用，请使用下方 Google 翻译备用入口。"});
+};
+
+function V5reviewBuild(){
+ var r=document.getElementById("review");if(!r)return;
+ r.innerHTML='<div class="card"><div style="font-size:12px;letter-spacing:.14em;color:#7a867f;font-weight:700">REVIEW · 间隔复习</div><h2>今日复习</h2><p class="muted">这里仅展示到期知识点；具体答题统一在「智能练习」中完成。</p><div id="v5reviewlist"></div><button class="primary" onclick="V5go(\'quiz\');setTimeout(function(){V5startSmart(\'weak\')},0)">开始到期复习</button></div>';
+ var d=Object.entries(state.schedule||{}).filter(function(x){return x[1].next&&x[1].next<=Date.now()});document.getElementById("v5reviewlist").innerHTML=d.length?d.map(function(x){var s=state.skills[x[0]]||{};return '<div class="skillrow"><b>'+V5esc(x[0])+'</b><br><span class="muted small">正确 '+(s.right||0)+' · 错误 '+(s.wrong||0)+' · 已到期</span></div>'}).join(""):"<div class='notice'>今天暂时没有到期知识点。</div>";
+}
+function V5quizBuild(){
+ var q=document.getElementById("quiz");if(!q)return;
+ q.innerHTML='<div class="card"><div style="font-size:12px;letter-spacing:.14em;color:#7a867f;font-weight:700">ADAPTIVE PRACTICE · 智能练习</div><h2>智能练习</h2><p class="muted">每日智能十题与薄弱点强化集中在这里，不再跳到学习中心或其他板块。</p><div class="practice-config"><div><label>模式</label><select id="v5smode"><option value="daily">每日智能 10 题</option><option value="weak">根据薄弱点生成</option><option value="mixed">全范围自适应</option></select></div><div><label>题量</label><select id="v5scount"><option selected>10</option><option>15</option><option>20</option><option>30</option></select></div><div><label>范围</label><select id="v5sunit"><option value="ALL">E1–E8 全部</option>'+Object.keys(V5UG).map(function(u){return '<option value="'+u+'">'+u+'</option>'}).join("")+'</select></div></div><button class="primary" onclick="V5startSmart()">开始智能练习</button><button class="secondary" onclick="V5startSmart(\'weak\')" style="margin-left:7px">直接强化薄弱点</button></div><div id="v5smartstage" class="card v5stage"><div class="muted">设置完成后，练习会直接在这里开始。</div></div>';
+}
+function V5go(id){
+ document.querySelectorAll(".page").forEach(function(x){x.classList.remove("active")});var p=document.getElementById(id);if(p)p.classList.add("active");document.querySelectorAll(".tab").forEach(function(x){x.classList.toggle("active",x.dataset.page===id)});
+ if(id==="home"){V5home();V5stats()}
+ if(id==="learn")V5learnBuild();
+ if(id==="quiz")V5quizBuild();
+ if(id==="words")V5wordsBuild();
+ if(id==="review")V5reviewBuild();
+ if(id==="mistakes"){try{renderMistakes()}catch(e){}}
+ if(id==="library"){try{renderSourceCatalog();renderCustomMaterials()}catch(e){}}
+ if(id==="data"){try{renderDataOverview()}catch(e){}}
+}
+window.V5go=V5go;window.go=V5go;
+window.startSmartQuiz=function(){V5go("quiz");setTimeout(function(){V5startSmart()},0)};
+window.startReview=function(){V5go("review");};
+window.startSkill=function(){V5go("quiz");setTimeout(function(){V5startSmart("weak")},0)};
+window.startUnit=function(unit){V5go("learn");setTimeout(function(){var s=document.getElementById("v5lu");if(s){s.value=unit;V5topics()}},0)};
+
+function V5init(){
+ V5style();
+ var gt=document.querySelector('[data-page="grammar"]');if(gt)gt.remove();var gp=document.getElementById("grammar");if(gp)gp.remove();
+ document.querySelectorAll(".tab").forEach(function(b){b.onclick=function(){V5go(b.dataset.page)}});
+ V5home();V5learnBuild();V5quizBuild();V5wordsBuild();V5reviewBuild();V5stats();
+}
+V5init();
+})();
