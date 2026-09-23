@@ -334,13 +334,28 @@ function V5showMem(){
  document.getElementById("v5mstat").textContent="第 "+(V5mem.pos+1)+" / "+V5mem.items.length+" 题 · 选择后立即判断";
 }
 window.V5answerMem=function(btn,val){
- if(V5mem.answered)return;var q=V5mem.items[V5mem.pos],z=V5vp(q.raw),correct=V5mem.mode==="de2zh"?z.zh:z.de,ok=val===correct;V5mem.answered=true;
- var st=V5store(),k=V5key(q),x=st[k]||{right:0,wrong:0,streak:0,mastery:0};if(ok){x.right++;x.streak=(x.streak||0)+1;x.mastery=Math.min(100,(x.mastery||0)+12+Math.min(x.streak,5)*2);V5mem.score++}else{x.wrong++;x.streak=0;x.mastery=Math.max(0,(x.mastery||0)-25)}x.last=Date.now();x.due=Date.now()+(ok?86400000*Math.min(Math.max(x.streak,1),14):600000);st[k]=x;V5save(st);
- document.querySelectorAll("#v5mopts .v5memopt").forEach(function(b){b.disabled=true;if(b.textContent===correct)b.classList.add("correct");if(b===btn&&!ok)b.classList.add("wrong")});
- fb.innerHTML='<div class="answer '+(ok?"ok":"bad")+'"><b>'+(ok?"✓ 正确":"✗ 错误")+'</b><br>'+(ok?"":"<b>正确答案：</b>"+V5esc(correct)+"<br>")+'<span class="small">本词条熟练度：'+x.mastery+'%</span></div>';nx.classList.add("show");
- nx.disabled=false;
- nx.focus();
- V5renderVP();
+ try{
+  if(V5mem.answered)return;
+  var q=V5mem.items[V5mem.pos],z=V5vp(q.raw),correct=V5mem.mode==="de2zh"?z.zh:z.de,ok=val===correct;
+  V5mem.answered=true;
+  var st=V5store(),k=V5key(q),x=st[k]||{right:0,wrong:0,streak:0,mastery:0};
+  if(ok){x.right++;x.streak=(x.streak||0)+1;x.mastery=Math.min(100,(x.mastery||0)+12+Math.min(x.streak,5)*2);V5mem.score++}
+  else{x.wrong++;x.streak=0;x.mastery=Math.max(0,(x.mastery||0)-25)}
+  x.last=Date.now();x.due=Date.now()+(ok?86400000*Math.min(Math.max(x.streak,1),14):600000);st[k]=x;V5save(st);
+  document.querySelectorAll("#v5mopts .v5memopt").forEach(function(b){b.disabled=true;if(b.textContent===correct)b.classList.add("correct");if(b===btn&&!ok)b.classList.add("wrong")});
+  var fb=document.getElementById("v5mfb");
+  if(fb){
+    fb.innerHTML='<div class="answer '+(ok?"ok":"bad")+'"><b>'+(ok?"✓ 正确":"✗ 错误")+'</b><br><b>正确答案：</b>'+V5esc(correct)+'<br><span class="small">本词条熟练度：'+x.mastery+'%</span><br><button type="button" id="v5mnext2" class="primary" style="margin-top:12px">下一题 →</button></div>';
+    var nb=document.getElementById("v5mnext2");
+    if(nb)nb.addEventListener("click",function(e){e.preventDefault();window.V5nextMem()});
+  }
+  var nx=document.getElementById("v5mnext");if(nx){nx.classList.add("show");nx.disabled=false;nx.style.display="inline-flex"}
+  V5renderVP();
+ }catch(e){
+  var fb2=document.getElementById("v5mfb");
+  if(fb2)fb2.innerHTML='<div class="answer bad"><b>答题处理出现问题</b><br><span class="small">'+V5esc(String(e&&e.message||e))+'</span></div>';
+  console.error("V5 answer error",e);
+ }
 };
 window.V5nextMem=function(){if(!V5mem.answered)return;V5mem.pos++;V5showMem()};
 function V5renderVP(){
